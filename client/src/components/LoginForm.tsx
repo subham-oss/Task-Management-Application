@@ -1,5 +1,7 @@
 import { Eye, EyeOff, Mail } from "lucide-react";
 
+import { Link } from "react-router-dom";
+
 import { useState } from "react";
 
 import { useForm } from "react-hook-form";
@@ -83,9 +85,9 @@ export default function LoginForm() {
           Remember Me
         </label>
 
-        <a href="#" className="text-blue-400">
+        <Link to="/forgot-password" className="text-blue-400">
           Forgot Password?
-        </a>
+        </Link>
       </div>
 
       <button
