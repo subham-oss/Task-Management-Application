@@ -18,11 +18,13 @@ export default function App() {
           : "light-gradient text-black"
       }
     >
+        
       <div className="fixed top-5 right-5 z-50">
-        <ThemeToggle
+        { <ThemeToggle
           dark={dark}
           toggle={toggleTheme}
-        />
+        /> }
+        
       </div>
 
       <div className="orb bg-blue-500 w-72 h-72 top-0 left-0" />
