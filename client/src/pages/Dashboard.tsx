@@ -1,6 +1,6 @@
-import React from "react";
 import { useTheme } from "../hooks/useTheme";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const Dashboard = () => {
   const { dark, toggleTheme } = useTheme();
@@ -14,6 +14,7 @@ const Dashboard = () => {
           dark={dark}
           toggleTheme={toggleTheme}
         />  }
+        <Footer />
   </div>;
 };
 

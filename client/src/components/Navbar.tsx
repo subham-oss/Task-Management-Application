@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
-import { Menu, X, Search, Bell, Plus, CheckSquare, User } from "lucide-react";
+import { Menu, X, Search, Bell, Plus, CheckSquare, User, } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -132,6 +132,18 @@ export default function Navbar({ dark, toggleTheme }: NavbarProps) {
             }}
             className="fixed top-0 right-0 h-screen w-72 glass z-50 p-6"
           >
+             <div className="flex items-center justify-between mb-8">
+        <h2 className="font-bold text-lg">
+          Menu
+        </h2>
+
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="glass p-2 rounded-lg"
+        >
+          <X size={20} />
+        </button>
+      </div>
             <div className="flex flex-col gap-6 mt-10">
               {navItems.map((item) => (
                 <NavLink
