@@ -24,8 +24,7 @@ export default function App() {
           dark={dark}
           toggle={toggleTheme}
         /> }
-        
-      </div>
+      </div> 
 
       <div className="orb bg-blue-500 w-72 h-72 top-0 left-0" />
       <div className="orb bg-purple-500 w-72 h-72 bottom-0 right-0" />

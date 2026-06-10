@@ -15,7 +15,7 @@ type NavbarProps = {
 const navItems = [
   {
     name: "Dashboard",
-    path: "/",
+    path: "/dashboard",
   },
   {
     name: "Tasks",

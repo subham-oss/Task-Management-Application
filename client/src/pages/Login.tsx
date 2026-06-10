@@ -9,12 +9,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { loginSchema, type LoginSchema } from "../lib/schema";
 
+
+
 import { FaGithub, FaGoogle } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
 export default function Login() {
   const [show, setShow] = useState(false);
-
+   
   const [loading, setLoading] = useState(false);
 
   const {
@@ -39,6 +41,7 @@ export default function Login() {
   };
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
+      
       <div className="hidden lg:grid p-10">
         <div className="glass rounded-3xl p-10">
           <h1 className="text-5xl font-bold">Welcome Back</h1>
