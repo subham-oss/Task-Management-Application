@@ -5,12 +5,6 @@ import { Menu, X, Search, Bell, Plus, CheckSquare, User, } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
 
-import ThemeToggle from "./ThemeToggle";
-
-type NavbarProps = {
-  dark: boolean;
-  toggleTheme: () => void;
-};
 
 const navItems = [
   {
@@ -35,7 +29,7 @@ const navItems = [
   },
 ];
 
-export default function Navbar({ dark, toggleTheme }: NavbarProps) {
+export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -95,7 +89,7 @@ export default function Navbar({ dark, toggleTheme }: NavbarProps) {
               </button>
 
               {/* Theme */}
-              <ThemeToggle dark={dark} toggle={toggleTheme} />
+             
 
               {/* Profile */}
               <button className="glass p-3 rounded-xl">
@@ -165,7 +159,6 @@ export default function Navbar({ dark, toggleTheme }: NavbarProps) {
                 Notifications
               </button>
 
-              <ThemeToggle dark={dark} toggle={toggleTheme} />
             </div>
           </motion.div>
         )}

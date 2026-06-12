@@ -6,8 +6,9 @@ import ForgotPassword from "../pages/ForgotPassword";
 import Dashboard from "../pages/Dashboard";
 import Tasks from "../pages/Tasks";
 import Projects from "../pages/Projects";
-import { Calendar } from "lucide-react";
+import Calendar from "../pages/Calendar";
 import Analytics from "../pages/Analytics";
+import Home from "../pages/Home";
 
 export default function AppRouter() {
   return (
@@ -17,14 +18,11 @@ export default function AppRouter() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />}  />
-
         <Route path="/tasks"  element={<Tasks />} />
-
         <Route path="/projects"  element={<Projects />} />
-
         <Route path="/calendar"  element={<Calendar />}  />
-
         <Route path="/analytics"  element={<Analytics />}  />
+        <Route path="/" element={<Home/>} />
       </Routes>
     </BrowserRouter>
   );
