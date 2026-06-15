@@ -1,168 +1,159 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import {
+  Menu,
+  X,
+} from "lucide-react";
 
-import { Menu, X, Search, Bell, Plus, CheckSquare, User, } from "lucide-react";
-
-import { motion, AnimatePresence } from "framer-motion";
-
-
-const navItems = [
-  {
-    name: "Dashboard",
-    path: "/dashboard",
-  },
-  {
-    name: "Tasks",
-    path: "/tasks",
-  },
-  {
-    name: "Projects",
-    path: "/projects",
-  },
-  {
-    name: "Calendar",
-    path: "/calendar",
-  },
-  {
-    name: "Analytics",
-    path: "/analytics",
-  },
-];
+import ThemeToggle from "./ThemeToggle";
+import { useTheme } from "../context/ThemeContext";
 
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const { dark, toggleTheme } = useTheme();
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    `
+      transition-all duration-300 hover:text-blue-500
+      ${isActive ? "text-blue-500 font-semibold" : ""}
+    `;
 
   return (
-    <>
-      <header className="fixed top-0 left-0 w-full z-50">
-        <div className="mx-4 mt-4 glass rounded-2xl px-6 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
-              <CheckSquare size={24} />
-              <span className="font-bold text-xl ">TaskFlow</span>
-            </Link>
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 py-4">
+      <nav
+        className="
+          max-w-7xl mx-auto
+          glass
+          rounded-2xl
+          px-6 py-4
+          flex items-center justify-between
+        "
+      >
+        {/* Logo */}
+        <Link
+          to="/"
+          className="text-2xl font-bold"
+        >
+          TaskFlow
+        </Link>
 
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-6">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.name}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    `transition ${
-                      isActive
-                        ? "font-semibold text-blue-500"
-                        : "opacity-80 hover:opacity-100"
-                    }`
-                  }
-                >
-                  {item.name}
-                </NavLink>
-              ))}
-            </nav>
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-8">
+          <NavLink
+            to="/"
+            className={navLinkClass}
+          >
+            Home
+          </NavLink>
 
-            {/* Right Side */}
-            <div className="hidden lg:flex items-center gap-3">
-              {/* Search */}
-              <div className="relative">
-                <Search
-                  size={18}
-                  className="absolute left-3 top-1/2 -translate-y-1/2"
-                />
+          <NavLink
+            to="/about"
+            className={navLinkClass}
+          >
+            About
+          </NavLink>
 
-                <input
-                  placeholder="Search..."
-                  className="glass rounded-xl pl-10 pr-4 py-2 outline-none"
-                />
-              </div>
+          <NavLink
+            to="/contact"
+            className={navLinkClass}
+          >
+            Contact
+          </NavLink>
+        </div>
 
-              {/* Create */}
-              <button className="glass px-4 py-2 rounded-xl flex items-center gap-2 hover:scale-105 transition">
-                <Plus size={16} />
-                Create
-              </button>
+        {/* Desktop Actions */}
+        <div className="hidden md:flex items-center gap-4">
+          <Link
+            to="/login"
+            className="
+              px-5 py-2 rounded-xl
+              bg-blue-600 text-white
+              hover:bg-blue-700
+              transition
+            "
+          >
+            Login
+          </Link>
 
-              {/* Notifications */}
-              <button className="glass p-3 rounded-xl">
-                <Bell size={18} />
-              </button>
+          <ThemeToggle
+            dark={dark}
+            toggle={toggleTheme}
+          />
+        </div>
 
-              {/* Theme */}
-             
+        {/* Mobile Actions */}
+        <div className="flex md:hidden items-center gap-3">
+          <ThemeToggle
+            dark={dark}
+            toggle={toggleTheme}
+          />
 
-              {/* Profile */}
-              <button className="glass p-3 rounded-xl">
-                <User size={18} />
-              </button>
-            </div>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-2 rounded-lg glass"
+          >
+            {isOpen ? (
+              <X size={22} />
+            ) : (
+              <Menu size={22} />
+            )}
+          </button>
+        </div>
+      </nav>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden"
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div
+          className="
+            md:hidden
+            mt-3
+            glass
+            rounded-2xl
+            max-w-7xl mx-auto
+            p-6
+          "
+        >
+          <div className="flex flex-col gap-5">
+            <NavLink
+              to="/"
+              className={navLinkClass}
+              onClick={() => setIsOpen(false)}
             >
-              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+              Home
+            </NavLink>
+
+            <NavLink
+              to="/about"
+              className={navLinkClass}
+              onClick={() => setIsOpen(false)}
+            >
+              About
+            </NavLink>
+
+            <NavLink
+              to="/contact"
+              className={navLinkClass}
+              onClick={() => setIsOpen(false)}
+            >
+              Contact
+            </NavLink>
+
+            <Link
+              to="/login"
+              onClick={() => setIsOpen(false)}
+              className="
+                px-5 py-3 rounded-xl
+                bg-blue-600 text-white
+                hover:bg-blue-700
+                transition text-center
+              "
+            >
+              Login
+            </Link>
           </div>
         </div>
-      </header>
-
-      {/* Mobile Drawer */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{
-              opacity: 0,
-              x: 300,
-            }}
-            animate={{
-              opacity: 1,
-              x: 0,
-            }}
-            exit={{
-              opacity: 0,
-              x: 300,
-            }}
-            className="fixed top-0 right-0 h-screen w-72 glass z-50 p-6"
-          >
-             <div className="flex items-center justify-between mb-8">
-        <h2 className="font-bold text-lg">
-          Menu
-        </h2>
-
-        <button
-          onClick={() => setMobileOpen(false)}
-          className="glass p-2 rounded-lg"
-        >
-          <X size={20} />
-        </button>
-      </div>
-            <div className="flex flex-col gap-6 mt-10">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.name}
-                  to={item.path}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {item.name}
-                </NavLink>
-              ))}
-
-              <button className="glass p-3 rounded-xl flex items-center gap-2">
-                <Plus size={18} />
-                Create Task
-              </button>
-
-              <button className="glass p-3 rounded-xl flex items-center gap-2">
-                <Bell size={18} />
-                Notifications
-              </button>
-
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+      )}
+    </header>
   );
 }
