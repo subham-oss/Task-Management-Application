@@ -1,27 +1,38 @@
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function CTA() {
   return (
-    <section className="py-32 px-4">
+    <section className="relative py-28 px-4" style={{ perspective: "1200px" }}>
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className="max-w-5xl mx-auto bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-12 md:p-20 text-center text-white shadow-2xl relative overflow-hidden"
+        initial={{ opacity: 0, y: 30, rotateX: -10 }}
+        whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        style={{ transformStyle: "preserve-3d" }}
+        className="max-w-4xl mx-auto glass rounded-3xl px-8 py-16 md:px-16 md:py-20 text-center relative overflow-hidden"
       >
-        <div className="relative z-10">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to transform your workflow?</h2>
-          <p className="text-lg md:text-xl opacity-90 mb-10 max-w-2xl mx-auto">
-            Join thousands of teams already using TaskFlow to get more done in less time.
+        <div className="absolute -top-20 -left-20 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl" />
+
+        <div className="relative">
+          <h2 className="text-4xl md:text-5xl font-bold font-display tracking-tight max-w-xl mx-auto">
+            Ready to transform your workflow?
+          </h2>
+          <p className="mt-5 text-white/60 max-w-md mx-auto">
+           Join thousands of teams already using TaskFlow to get more done in less time.
           </p>
-          <Link
-            to="/signup"
-            className="inline-block px-10 py-4 rounded-full bg-white text-blue-600 font-bold text-lg hover:shadow-lg hover:scale-105 transition-all"
-          >
-            Start Your Free Trial
-          </Link>
+
+          <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              to="/register"
+              className="group flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-7 py-3.5 rounded-xl font-medium transition-all hover:scale-[1.03]"
+            >
+              Start for free
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
         </div>
       </motion.div>
     </section>
