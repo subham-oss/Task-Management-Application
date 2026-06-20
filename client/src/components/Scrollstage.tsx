@@ -1,6 +1,6 @@
 
 import { motion } from "framer-motion";
-import { useScrollTilt } from "../hooks/Usescrolltilt";
+import { useScrollTilt } from "../hooks/useScrolltilt.ts";
 import type { ReactNode } from "react";
 
 interface ScrollStageProps {
