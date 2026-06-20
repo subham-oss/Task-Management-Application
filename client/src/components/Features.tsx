@@ -23,7 +23,7 @@ export default function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.5, delay: i * 0.1 }}
-            className="glass p-6 rounded-2xl hover:-translate-y-2 transition-transform duration-300"
+            className="glass p-6 rounded-2xl hover:-translate-y-2 transition-transform duration-300 shadow-xl"
           >
             <div className="mb-4">{feature.icon}</div>
             <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>

@@ -56,7 +56,7 @@ function TaskCard({
         {statusIcon[card.status]}
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium truncate">{card.title}</p>
-          <p className="text-xs text-white/40 font-mono">
+          <p className="text-xs opacity-70 font-mono">
             {card.id} · {card.tag}
           </p>
         </div>
@@ -74,7 +74,7 @@ export default function Hero() {
   });
 
   return (
-    <div ref={stageRef} className="relative pt-40 pb-24 md:pt-52 md:pb-36 px-4">
+    <div ref={stageRef} className="relative pt-32 pb-24 md:pt-25 md:pb-25 px-4">
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
         
         <motion.div
@@ -82,8 +82,8 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs font-mono text-white/60 mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs font-mono opacity-70 mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
             Now shipping faster sprints
           </div>
 
@@ -96,7 +96,7 @@ export default function Hero() {
             </span>
           </h1>
 
-          <p className="mt-6 text-lg text-white/60 max-w-md">
+          <p className="mt-6 text-lg opacity-70 max-w-md">
             TaskFlow takes the backlog everyone's afraid to open and turns
             it into a clear, ordered plan your team actually follows.
           </p>
@@ -111,19 +111,19 @@ export default function Hero() {
             </Link>
             <a
               href="#dashboard-preview"
-              className="px-6 py-3.5 rounded-xl font-medium glass hover:bg-white/10 transition"
+              className="px-6 py-3.5 rounded-xl font-medium glass shadow-xl hover:bg-white/10 transition"
             >
               See it in action
             </a>
           </div>
 
-          <p className="mt-8 text-sm text-white/40">
+          <p className="mt-8 text-sm opacity-70">
             No credit card required · Free for teams up to 5
           </p>
         </motion.div>
 
         <div
-          className="relative h-140 md:h-160"
+          className="relative h-140 md:h-160 "
           style={{ perspective: "1200px" }}
         >
           <div
