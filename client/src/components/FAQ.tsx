@@ -44,7 +44,7 @@ export default function FAQ() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.4, delay: i * 0.05 }}
-                className="glass rounded-2xl overflow-hidden"
+                className="glass rounded-2xl shadow-xl overflow-hidden"
               >
                 <button
                   onClick={() => setOpen(isOpen ? null : i)}
@@ -54,7 +54,7 @@ export default function FAQ() {
                   <motion.span
                     animate={{ rotate: isOpen ? 45 : 0 }}
                     transition={{ duration: 0.25 }}
-                    className="shrink-0 w-7 h-7 rounded-full bg-white/10 flex items-center justify-center"
+                    className="shrink-0 w-7 h-7 rounded-full shadow-xl bg-white/10 flex items-center justify-center"
                   >
                     <Plus className="w-4 h-4" />
                   </motion.span>
@@ -69,7 +69,7 @@ export default function FAQ() {
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
-                      <p className="px-6 pb-5 text-sm text-white/60 leading-relaxed">
+                      <p className="px-6 pb-5 text-sm opacity-70 leading-relaxed">
                         {faq.a}
                       </p>
                     </motion.div>
