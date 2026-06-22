@@ -75,7 +75,7 @@ export default function DashboardPreview() {
               >
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm font-semibold">{col.title}</span>
-                  <span className="text-xs font-mono text-white/40 bg-white/10 rounded-full px-2 py-0.5">
+                  <span className="text-xs font-mono opacity-40 bg-white/10 rounded-full px-2 py-0.5">
                     {col.count}
                   </span>
                 </div>
@@ -90,10 +90,10 @@ export default function DashboardPreview() {
                         <p className="text-sm font-medium leading-snug">
                           {task.title}
                         </p>
-                        <MoreHorizontal className="w-4 h-4 text-white/30 shrink-0" />
+                        <MoreHorizontal className="w-4 h-4 opacity-40 shrink-0" />
                       </div>
                       <div className="flex items-center justify-between mt-2.5">
-                        <span className="text-[11px] font-mono text-white/40">
+                        <span className="text-[11px] font-mono opacity-40">
                           {task.id}
                         </span>
                         <span className="text-[11px] px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-300">
@@ -116,7 +116,7 @@ export default function DashboardPreview() {
                     </div>
                   )}
                   {col.title === "To do" && (
-                    <div className="flex items-center gap-2 text-xs text-white/40 px-1 pt-1">
+                    <div className="flex items-center gap-2 text-xs opacity-40 px-1 pt-1">
                       <Circle className="w-3.5 h-3.5" />
                       <span>2 more queued</span>
                     </div>
