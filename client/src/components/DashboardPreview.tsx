@@ -58,7 +58,7 @@ export default function DashboardPreview() {
             <span className="w-3 h-3 rounded-full bg-rose-400/70" />
             <span className="w-3 h-3 rounded-full bg-amber-400/70" />
             <span className="w-3 h-3 rounded-full bg-emerald-400/70" />
-            <span className="ml-4 text-xs font-mono text-white/40">
+            <span className="ml-4 text-xs font-mono opacity-40">
               app.taskflow.io/sprint-24
             </span>
           </div>
@@ -71,7 +71,7 @@ export default function DashboardPreview() {
                 whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.5, delay: ci * 0.12 }}
-                className="bg-white/5 rounded-xl p-4"
+                className="bg-white/5 rounded-xl p-4 shadow-xl"
               >
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm font-semibold">{col.title}</span>

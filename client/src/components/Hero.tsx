@@ -82,7 +82,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs font-mono opacity-70 mb-6">
+          <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs font-mono opacity-40 mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
             Now shipping faster sprints
           </div>

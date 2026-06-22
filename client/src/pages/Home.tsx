@@ -6,6 +6,7 @@ import Statistics from "../components/Statistics";
 import Testimonials from "../components/Testimonials";
 import FAQ from "../components/FAQ";
 import CTA from "../components/CTA";
+import Footer from "../components/Footer";
 
 const Home = () => {
   return (
@@ -20,9 +21,7 @@ const Home = () => {
         <FAQ />
         <CTA />
       </main>
-      <footer className="text-center py-8 opacity-50 text-sm">
-        © {new Date().getFullYear()} TaskFlow. All rights reserved.
-      </footer>
+     <Footer/>
     </div>
   );
 };
