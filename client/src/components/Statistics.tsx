@@ -61,7 +61,7 @@ export default function Statistics() {
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2  md:grid-cols-3 gap-6">
           {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
@@ -70,12 +70,12 @@ export default function Statistics() {
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
               style={{ transformStyle: "preserve-3d" }}
-              className="glass rounded-2xl px-6 py-9 text-center"
+              className="glass rounded-2xl px-6 py-9 shadow-xl text-center"
             >
               <div className="text-3xl md:text-4xl font-bold tracking-tight">
                 <Counter value={stat.value} suffix={stat.suffix} />
               </div>
-              <p className="mt-3 text-sm text-white/50">{stat.label}</p>
+              <p className="mt-3 text-sm opacity-70">{stat.label}</p>
             </motion.div>
           ))}
         </div>
