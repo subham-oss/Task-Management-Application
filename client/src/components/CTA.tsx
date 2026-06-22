@@ -20,7 +20,7 @@ export default function CTA() {
           <h2 className="text-4xl md:text-5xl font-bold font-display tracking-tight max-w-xl mx-auto">
             Ready to transform your workflow?
           </h2>
-          <p className="mt-5 text-white/60 max-w-md mx-auto">
+          <p className="mt-5 opacity-70 max-w-md mx-auto">
            Join thousands of teams already using TaskFlow to get more done in less time.
           </p>
 
