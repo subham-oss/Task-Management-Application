@@ -60,10 +60,10 @@ export default function Testimonials() {
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, delay: i * 0.12 }}
               style={{ transformStyle: "preserve-3d" }}
-              className="glass rounded-2xl p-7 flex flex-col"
+              className="glass rounded-2xl p-7 shadow-xl flex flex-col"
             >
-              <Quote className="w-6 h-6 text-white/20 mb-4" />
-              <p className="text-sm leading-relaxed text-white/80 flex-1">
+              <Quote className="w-6 h-6 opacity-40 mb-4" />
+              <p className="text-sm leading-relaxed opacity-70 flex-1">
                 {t.quote}
               </p>
               <div className="flex items-center gap-3 mt-6 pt-6 border-t border-white/10">
@@ -74,7 +74,7 @@ export default function Testimonials() {
                 </div>
                 <div>
                   <p className="text-sm font-medium">{t.name}</p>
-                  <p className="text-xs text-white/40">{t.role}</p>
+                  <p className="text-xs opacity-70">{t.role}</p>
                 </div>
               </div>
             </motion.div>
