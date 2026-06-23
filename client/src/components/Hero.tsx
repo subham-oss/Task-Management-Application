@@ -103,7 +103,7 @@ export default function Hero() {
 
           <div className="mt-9 flex flex-wrap items-center gap-4">
             <Link
-              to="/signup"
+              to="/register"
               className="group flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3.5 rounded-xl font-medium transition-all hover:scale-[1.03]"
             >
               Start for free
