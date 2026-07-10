@@ -55,7 +55,7 @@ export default function Sidebar() {
     >
       <div>
         {/* Workspace Branding Header & Sidebar Control Toggle Button */}
-        <div className="p-4 flex items-center justify-between border-b border-black/5 dark:border-white/5 h-20">
+        <div className={`p-4 flex ${isExpanded ? "flex-row" : "flex-col gap-2"} items-center justify-between border-b border-black/5 dark:border-white/5 h-20`}>
           <AnimatePresence mode="wait">
             {isExpanded ? (
               <motion.span
@@ -89,7 +89,7 @@ export default function Sidebar() {
 
         {/* User Workspace Profile Component Metadata Info */}
         <div className="p-4 border-b border-black/5 dark:border-white/5">
-          <div className={clsx("flex items-center gap-3", !isExpanded && "justify-center")}>
+          <div className={clsx("flex items-center gap-3", !isExpanded && "justify-center py-2")}>
             {user.avatar ? (
               <img
                 src={user.avatar}
