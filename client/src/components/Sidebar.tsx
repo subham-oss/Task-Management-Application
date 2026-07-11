@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
-import { motion,  AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
+import ThemeToggle from "./ThemeToggle";
+import { useTheme } from "../context/ThemeContext";
 import { clsx } from "clsx";
 import {
   LayoutDashboard,
@@ -11,16 +13,17 @@ import {
   LogOut,
   Menu,
   ChevronLeft,
-  User
+  User,
 } from "lucide-react";
 
 // Explicit Framer Motion 12 Variant Typing for smooth structural transitions
 const sidebarVariants: Variants = {
   expanded: { width: 280 },
-  collapsed: { width: 80 }
+  collapsed: { width: 80 },
 };
 
 export default function Sidebar() {
+  const { dark, toggleTheme } = useTheme();
   const { id = "default-user" } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(true);
@@ -29,15 +32,36 @@ export default function Sidebar() {
   const user = {
     username: "Alex Mercer",
     email: "alex.m@taskflow.com",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop",
+    avatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop",
   };
 
   // Explicit path mapping synchronized with your React Router configuration
   const menuItems = [
-    { name: "Dashboard", path: `/dashboard/${id}`, exact: true, icon: <LayoutDashboard size={20} /> },
-    { name: "Manage Task", path: `/dashboard/${id}/tasks`, exact: false, icon: <CheckSquare size={20} /> },
-    { name: "Create Task", path: `/dashboard/${id}/create`, exact: false, icon: <PlusCircle size={20} /> },
-    { name: "Team Members", path: `/dashboard/${id}/team`, exact: false, icon: <Users size={20} /> },
+    {
+      name: "Dashboard",
+      path: `/dashboard/${id}`,
+      exact: true,
+      icon: <LayoutDashboard size={20} />,
+    },
+    {
+      name: "Manage Task",
+      path: `/dashboard/${id}/tasks`,
+      exact: false,
+      icon: <CheckSquare size={20} />,
+    },
+    {
+      name: "Create Task",
+      path: `/dashboard/${id}/create`,
+      exact: false,
+      icon: <PlusCircle size={20} />,
+    },
+    {
+      name: "Team Members",
+      path: `/dashboard/${id}/team`,
+      exact: false,
+      icon: <Users size={20} />,
+    },
   ];
 
   const handleLogout = () => {
@@ -55,7 +79,9 @@ export default function Sidebar() {
     >
       <div>
         {/* Workspace Branding Header & Sidebar Control Toggle Button */}
-        <div className={`p-4 flex ${isExpanded ? "flex-row" : "flex-col gap-2"} items-center justify-between border-b border-black/5 dark:border-white/5 h-20`}>
+        <div
+          className={`p-4 flex ${isExpanded ? "flex-row" : "flex-col gap-2"} items-center justify-between border-b border-black/5 dark:border-white/5 h-20`}
+        >
           <AnimatePresence mode="wait">
             {isExpanded ? (
               <motion.span
@@ -81,7 +107,9 @@ export default function Sidebar() {
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="p-2 rounded-xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 border border-black/5 dark:border-white/10 text-neutral-600 dark:text-neutral-300 transition-all cursor-pointer shrink-0"
-            title={isExpanded ? "Collapse Navigation Menu" : "Expand Navigation Menu"}
+            title={
+              isExpanded ? "Collapse Navigation Menu" : "Expand Navigation Menu"
+            }
           >
             {isExpanded ? <ChevronLeft size={18} /> : <Menu size={18} />}
           </button>
@@ -89,7 +117,12 @@ export default function Sidebar() {
 
         {/* User Workspace Profile Component Metadata Info */}
         <div className="p-4 border-b border-black/5 dark:border-white/5">
-          <div className={clsx("flex items-center gap-3", !isExpanded && "justify-center py-2")}>
+          <div
+            className={clsx(
+              "flex items-center gap-3",
+              !isExpanded && "justify-center py-2",
+            )}
+          >
             {user.avatar ? (
               <img
                 src={user.avatar}
@@ -110,8 +143,12 @@ export default function Sidebar() {
                   exit={{ opacity: 0, width: 0 }}
                   className="overflow-hidden whitespace-nowrap"
                 >
-                  <h4 className="text-sm font-semibold truncate max-w-37.5">{user.username}</h4>
-                  <p className="text-xs opacity-60 truncate max-w-37.5 font-medium mt-0.5">{user.email}</p>
+                  <h4 className="text-sm font-semibold truncate max-w-37.5">
+                    {user.username}
+                  </h4>
+                  <p className="text-xs opacity-60 truncate max-w-37.5 font-medium mt-0.5">
+                    {user.email}
+                  </p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -131,7 +168,7 @@ export default function Sidebar() {
                   !isExpanded && "justify-center",
                   isActive
                     ? "bg-blue-600 text-white shadow-lg shadow-blue-600/15"
-                    : "text-neutral-600 dark:text-neutral-400 hover:bg-black/5 dark:hover:bg-white/5 hover:text-neutral-900 dark:hover:text-white"
+                    : "text-neutral-600 dark:text-neutral-400 hover:bg-black/5 dark:hover:bg-white/5 hover:text-neutral-900 dark:hover:text-white",
                 )
               }
             >
@@ -159,12 +196,25 @@ export default function Sidebar() {
       </div>
 
       {/* Footer Navigation Termination Utilities block */}
-      <div className="p-3 border-t border-black/5 dark:border-white/5">
+      <div className="p-3 border-t border-black/5 dark:border-white/5 space-y-3">
+        <div
+          className={clsx(
+            "flex items-center px-3 h-11",
+            isExpanded ? "justify-between" : "justify-center",
+          )}
+        >
+          {isExpanded && (
+            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+              {dark ? "Dark Mode" : "Light Mode"}
+            </span>
+          )}
+          <ThemeToggle dark={dark} toggle={toggleTheme} />
+        </div>
         <button
           onClick={handleLogout}
           className={clsx(
             "w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium text-red-500 hover:bg-red-500/10 transition-all cursor-pointer group relative",
-            !isExpanded && "justify-center"
+            !isExpanded && "justify-center",
           )}
         >
           <div className="shrink-0">
