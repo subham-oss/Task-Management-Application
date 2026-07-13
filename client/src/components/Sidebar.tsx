@@ -88,7 +88,7 @@ export default function Sidebar() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
-                className="text-xl font-bold tracking-tight bg-linear-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent whitespace-nowrap"
+                className="text-2xl font-bold"
               >
                 TaskFlow
               </motion.span>
@@ -106,7 +106,7 @@ export default function Sidebar() {
 
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="p-2 rounded-xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 border border-black/5 dark:border-white/10 text-neutral-600 dark:text-neutral-300 transition-all cursor-pointer shrink-0"
+            className="p-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-100"
             title={
               isExpanded ? "Collapse Navigation Menu" : "Expand Navigation Menu"
             }
@@ -168,7 +168,7 @@ export default function Sidebar() {
                   !isExpanded && "justify-center",
                   isActive
                     ? "bg-blue-600 text-white shadow-lg shadow-blue-600/15"
-                    : "text-neutral-600 dark:text-neutral-400 hover:bg-black/5 dark:hover:bg-white/5 hover:text-neutral-900 dark:hover:text-white",
+                    : "opacity-70",
                 )
               }
             >
@@ -204,7 +204,7 @@ export default function Sidebar() {
           )}
         >
           {isExpanded && (
-            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+            <span className="text-xs font-medium opacity-70 uppercase tracking-wider">
               {dark ? "Dark Mode" : "Light Mode"}
             </span>
           )}
