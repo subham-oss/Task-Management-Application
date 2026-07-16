@@ -9,6 +9,7 @@ import Dashboard from "../pages/Dashboard";
 import TeamMembers from "../pages/TeamMembers";
 import CreateTask from "../pages/CreateTask";
 import ManageTask from "../pages/ManageTask";
+import EditTask from "../pages/EditTask";
 
 export default function AppRouter() {
   const islogin: boolean = true
@@ -27,6 +28,7 @@ export default function AppRouter() {
             <Route path="/dashboard/:id/team" element={<TeamMembers />} />
             <Route path="/dashboard/:id/create" element={<CreateTask />} />
             <Route path="/dashboard/:id/tasks" element={<ManageTask />} />
+            <Route path="/dashboard/:id/tasks/edit/:taskId" element={<EditTask />} />
              
           </>
             )}
