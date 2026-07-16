@@ -167,12 +167,15 @@ export default function ManageTasks() {
                     </div>
                     
                     <div className="flex items-center gap-1">
-                      <button 
+                      {/* --- ACTIVE NAVIGATION LINK REPLACED HERE --- */}
+                      <Link 
+                        to={`/dashboard/${id}/tasks/edit/${task.id}`}
                         title="Edit Task Context Parameters"
                         className="p-2 rounded-lg bg-black/5 dark:bg-white/5 hover:bg-blue-600/10 border border-black/5 dark:border-white/5 hover:text-blue-400 transition cursor-pointer"
                       >
                         <Edit3 size={14} />
-                      </button>
+                      </Link>
+                      
                       <button 
                         onClick={() => handleDeleteTask(task.id)}
                         title="Terminate/Purge Task Directive"
