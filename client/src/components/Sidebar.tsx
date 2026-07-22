@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams,Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
@@ -120,20 +120,27 @@ export default function Sidebar() {
           <div
             className={clsx(
               "flex items-center gap-3",
-              !isExpanded && "justify-center py-2",
+              !isExpanded && "justify-center",
             )}
           >
-            {user.avatar ? (
-              <img
-                src={user.avatar}
-                alt={user.username}
-                className="w-11 h-11 rounded-xl object-cover ring-2 ring-blue-500/30 border border-white/20 shrink-0"
-              />
-            ) : (
-              <div className="w-11 h-11 rounded-xl bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center shrink-0">
-                <User size={20} />
-              </div>
-            )}
+            {/* CLICKABLE AVATAR LINK */}
+            <Link
+              to={`/dashboard/${id}/avatar`}
+              title="Click to update avatar"
+              className="shrink-0 rounded-xl overflow-hidden group relative block"
+            >
+              {user.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={user.username}
+                  className="w-11 h-11 rounded-xl object-cover ring-2 ring-blue-500/30 border border-white/20 transition-transform group-hover:scale-105"
+                />
+              ) : (
+                <div className="w-11 h-11 rounded-xl bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center">
+                  <User size={20} />
+                </div>
+              )}
+            </Link>
 
             <AnimatePresence>
               {isExpanded && (
@@ -143,10 +150,10 @@ export default function Sidebar() {
                   exit={{ opacity: 0, width: 0 }}
                   className="overflow-hidden whitespace-nowrap"
                 >
-                  <h4 className="text-sm font-semibold truncate max-w-37.5">
+                  <h4 className="text-sm font-semibold truncate max-w-[150px]">
                     {user.username}
                   </h4>
-                  <p className="text-xs opacity-60 truncate max-w-37.5 font-medium mt-0.5">
+                  <p className="text-xs opacity-60 truncate max-w-[150px] font-medium mt-0.5">
                     {user.email}
                   </p>
                 </motion.div>
