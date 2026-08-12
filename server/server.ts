@@ -9,7 +9,7 @@ dotenv.config();
 
 const app: Express = express();
 app.use(express.json());
-const port = 3000;
+const port = process.env.PORT;
 connectDB();
 app.use(cors()); 
 app.use('/api/user', userRouter);
