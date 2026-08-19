@@ -85,25 +85,76 @@ export const register = async (req: Request, res: Response) => {
 // Login function
 
 export const login = async (req: Request, res: Response) => {
-  try {
+   try {
     const { email, password } = req.body;
+
     if (!email || !password) {
       return res
         .status(400)
         .json({ message: "Please provide email and password" });
     }
+
     const user = await User.findOne({ email });
+
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
+
     if (!isPasswordValid) {
-      return res.status(400).json({ message: "Invalid password" });
+      return res.status(401).json({ message: "Invalid password" });
     }
-    const token = jwt.sign({ email }, process.env.JWT_SECRET as string, {
-      expiresIn: "1d",
+
+    // Create Access Token
+    const accessToken = jwt.sign(
+      {
+        userId: user._id,
+        email: user.email,
+      },
+      process.env.JWT_ACCESS_SECRET as string,
+      {
+        expiresIn: "15m",
+      }
+    );
+
+    // Create Refresh Token
+    const refreshToken = jwt.sign(
+      {
+        userId: user._id,
+      },
+      process.env.JWT_REFRESH_SECRET as string,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    // Expiry date for MongoDB
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+
+    // Optional: remove old refresh tokens for this user
+    await RefreshToken.deleteMany({ userId: user._id });
+
+    // Save new refresh token
+    await RefreshToken.create({
+      userId: user._id,
+      token: refreshToken,
+      expiresAt,
     });
-    res.json({ message: "Login successful", token });
+
+    // Store refresh token in HttpOnly Cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      message: "Login successful",
+      accessToken,
+    });
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
