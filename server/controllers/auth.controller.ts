@@ -160,4 +160,69 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
+export const generateAccessToken = async (req: Request, res: Response) => {
+  try {
+    const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
+    if (!refreshToken) {
+      return res.status(401).json({
+        message: "Refresh token required",
+      });
+    }
+
+
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_SECRET as string
+    ) as {
+      userId: string;
+    };
+
+    const storedToken = await RefreshToken.findOne({
+      token: refreshToken,
+      userId: decoded.userId,
+    });
+
+     if (!storedToken) {
+      return res.status(403).json({
+        message: "Invalid or revoked refresh token",
+      });
+    }
+
+    if (storedToken.expiresAt < new Date()) {
+      await RefreshToken.deleteOne({ _id: storedToken._id });
+
+      return res.status(403).json({
+        message: "Refresh token expired",
+      });
+    }
+
+    const user = await User.findById(decoded.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+     const accessToken = jwt.sign(
+      {
+        userId: user._id,
+        email: user.email,
+      },
+      process.env.JWT_ACCESS_SECRET as string,
+      {
+        expiresIn: "15m",
+      }
+    );
+
+    return res.status(200).json({
+      message: "Access token generated successfully",
+      accessToken,
+    });
+
+  }
+  catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+};
