@@ -48,9 +48,8 @@ export const register = async (req: Request, res: Response) => {
       process.env.JWT_REFRESH_SECRET as string,
       {
         expiresIn: "7d",
-      }
+      },
     );
-
 
     // Calculate refresh-token expiry
     const refreshTokenExpiry = new Date();
@@ -62,7 +61,6 @@ export const register = async (req: Request, res: Response) => {
       token: refreshToken,
       expiresAt: refreshTokenExpiry,
     });
-
 
     // Send refresh token as HttpOnly cookie
     res.cookie("refreshToken", refreshToken, {
@@ -85,7 +83,7 @@ export const register = async (req: Request, res: Response) => {
 // Login function
 
 export const login = async (req: Request, res: Response) => {
-   try {
+  try {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -115,7 +113,7 @@ export const login = async (req: Request, res: Response) => {
       process.env.JWT_ACCESS_SECRET as string,
       {
         expiresIn: "15m",
-      }
+      },
     );
 
     // Create Refresh Token
@@ -126,7 +124,7 @@ export const login = async (req: Request, res: Response) => {
       process.env.JWT_REFRESH_SECRET as string,
       {
         expiresIn: "7d",
-      }
+      },
     );
 
     // Expiry date for MongoDB
@@ -170,10 +168,9 @@ export const generateAccessToken = async (req: Request, res: Response) => {
       });
     }
 
-
     const decoded = jwt.verify(
       refreshToken,
-      process.env.JWT_REFRESH_SECRET as string
+      process.env.JWT_REFRESH_SECRET as string,
     ) as {
       userId: string;
     };
@@ -183,7 +180,7 @@ export const generateAccessToken = async (req: Request, res: Response) => {
       userId: decoded.userId,
     });
 
-     if (!storedToken) {
+    if (!storedToken) {
       return res.status(403).json({
         message: "Invalid or revoked refresh token",
       });
@@ -205,7 +202,7 @@ export const generateAccessToken = async (req: Request, res: Response) => {
       });
     }
 
-     const accessToken = jwt.sign(
+    const accessToken = jwt.sign(
       {
         userId: user._id,
         email: user.email,
@@ -213,16 +210,14 @@ export const generateAccessToken = async (req: Request, res: Response) => {
       process.env.JWT_ACCESS_SECRET as string,
       {
         expiresIn: "15m",
-      }
+      },
     );
 
     return res.status(200).json({
       message: "Access token generated successfully",
       accessToken,
     });
-
-  }
-  catch (err: any) {
+  } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
 };
