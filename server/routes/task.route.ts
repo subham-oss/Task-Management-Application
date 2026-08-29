@@ -4,6 +4,6 @@ import {authMiddleware} from '../middleware/auth.middleware.ts';
 
 const Taskrouter = Router();
 
-Taskrouter.post('/task', authMiddleware, createTask);
+Taskrouter.post('/createtask', authMiddleware, createTask);
 
 export default Taskrouter;
