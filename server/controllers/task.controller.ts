@@ -39,3 +39,28 @@ export const createTask = async (req: Request, res: Response) => {
     });
   }
 };
+
+
+export const getTasks = async (req: Request, res: Response) => {
+  try{
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+    const tasks = await Task.find({ userId }).sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      message: "Tasks retrieved successfully",
+      tasks,
+    })
+  }
+  catch (err: any) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+}
