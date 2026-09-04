@@ -112,3 +112,39 @@ export const editTask = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const deleteTask = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+    const task = await Task.findOne({
+      _id: req.params.taskId,
+      $or: [
+        { userId: userId },       // Task owner
+        { sharedWith: userId },   // Shared user
+      ],
+    });
+
+    if (!task) {
+      return res.status(404).json({
+        message: "Task not found or you don't have permission",
+      });
+    }
+
+    await task.deleteOne();
+
+    return res.status(200).json({
+      message: "Task deleted successfully",
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+};
