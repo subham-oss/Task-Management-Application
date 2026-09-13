@@ -7,6 +7,7 @@ interface Task extends Document {
   Initial_Phase_State: string;
   Severity_Index: string;
   Target_Delivery_Date: Date;
+  sharedWith: mongoose.Types.ObjectId[];
   createdAt: Date;
 }
 
