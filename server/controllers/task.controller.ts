@@ -49,7 +49,9 @@ export const getTasks = async (req: Request, res: Response) => {
       });
     }
 
-    const tasks = await Task.find({ userId }).sort({ createdAt: -1 });
+    const tasks = await Task.find({
+      $or: [{ createdBy: userId }, { sharedWith: userId }],
+    }).sort({ createdAt: -1 });
 
     return res.status(200).json({
       message: "Tasks retrieved successfully",
@@ -75,8 +77,8 @@ export const editTask = async (req: Request, res: Response) => {
     const task = await Task.findOne({
       _id: req.params.id,
       $or: [
-        { userId: userId },        // Owner
-        { sharedWith: userId },    // User with permission
+        { userId: userId }, // Owner
+        { sharedWith: userId }, // User with permission
       ],
     });
 
@@ -126,8 +128,8 @@ export const deleteTask = async (req: Request, res: Response) => {
     const task = await Task.findOne({
       _id: req.params.taskId,
       $or: [
-        { userId: userId },       // Task owner
-        { sharedWith: userId },   // Shared user
+        { userId: userId }, // Task owner
+        { sharedWith: userId }, // Shared user
       ],
     });
 
