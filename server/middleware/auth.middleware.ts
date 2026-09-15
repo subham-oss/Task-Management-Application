@@ -9,7 +9,7 @@ interface JwtPayload {
 declare global {
   namespace Express {
     interface Request {
-      user: JwtPayload;
+      user?: JwtPayload;
     }
   }
 }
@@ -17,7 +17,7 @@ declare global {
 export const authMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const authHeader = req.headers.authorization;
@@ -28,12 +28,14 @@ export const authMiddleware = (
       });
     }
 
-    const accessToken = authHeader.split(" ")[1];
+    const accessToken = authHeader.substring(7);
+    const secret = process.env.JWT_ACCESS_SECRET;
 
-    const decoded = jwt.verify(
-      accessToken,
-      process.env.JWT_ACCESS_SECRET as string
-    ) as JwtPayload;
+    if (!secret) {
+      console.error("JWT_ACCESS_SECRET is missing");
+    }
+    
+    const decoded = jwt.verify(accessToken, secret as string) as JwtPayload;
 
     req.user = decoded;
 
