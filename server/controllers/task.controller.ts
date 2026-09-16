@@ -50,9 +50,9 @@ export const getTasks = async (req: Request, res: Response) => {
     }
 
     const tasks = await Task.find({
-      $or: [{ createdBy: userId }, { sharedWith: userId }],
+      $or: [{ userId: userId }, { sharedWith: userId }],
     }).sort({ createdAt: -1 });
-
+    
     return res.status(200).json({
       message: "Tasks retrieved successfully",
       tasks,
