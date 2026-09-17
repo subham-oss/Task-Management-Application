@@ -52,7 +52,7 @@ export const getTasks = async (req: Request, res: Response) => {
     const tasks = await Task.find({
       $or: [{ userId: userId }, { sharedWith: userId }],
     }).sort({ createdAt: -1 });
-    
+
     return res.status(200).json({
       message: "Tasks retrieved successfully",
       tasks,
@@ -67,7 +67,6 @@ export const getTasks = async (req: Request, res: Response) => {
 export const editTask = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
-
     if (!userId) {
       return res.status(401).json({
         message: "Unauthorized",
@@ -75,7 +74,7 @@ export const editTask = async (req: Request, res: Response) => {
     }
 
     const task = await Task.findOne({
-      _id: req.params.id,
+      _id: req.params.taskId,
       $or: [
         { userId: userId }, // Owner
         { sharedWith: userId }, // User with permission
