@@ -7,7 +7,7 @@ export interface IFriend extends Document {
     createdAt: Date;
 }
 
-const friendSchema = new Schema(
+const friendSchema: Schema<IFriend> = new Schema(
   {
     requester: {
       type: Schema.Types.ObjectId,
