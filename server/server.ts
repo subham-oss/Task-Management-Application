@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import connectDB  from './config/db.ts';
 import  userRouter  from './routes/user.route.ts';
 import Taskrouter from './routes/task.route.ts';
+import Friendrouter from './routes/friendship.route.ts';
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ connectDB();
 app.use(cors()); 
 app.use('/api/user', userRouter);
 app.use('/api/task', Taskrouter);
+app.use('/api/friend', Friendrouter);
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
 });
