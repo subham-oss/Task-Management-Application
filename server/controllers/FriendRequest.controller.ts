@@ -1,10 +1,7 @@
 import type { Request, Response } from "express";
 import Friend from "../models/friend.model.ts";
 
-export const sendFriendRequest = async (
-  req: Request,
-  res: Response
-) => {
+export const sendFriendRequest = async (req: Request, res: Response) => {
   try {
     const requesterId = req.user?.userId;
     const { receiverId } = req.body;
@@ -63,10 +60,7 @@ export const sendFriendRequest = async (
   }
 };
 
-export const acceptFriendRequest = async (
-  req: Request,
-  res: Response
-) => {
+export const acceptFriendRequest = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
     const { friendId } = req.params;
@@ -97,6 +91,31 @@ export const acceptFriendRequest = async (
       message: "Friend request accepted",
       request,
     });
+  } catch (err: any) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+};
+
+export const getfriend = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+    const friends = await Friend.find({
+      $or: [{ requester: userId }, { receiver: userId }],
+      status: "accepted",
+    })
+      .populate("requester", "Full_name email")
+      .populate("receiver", "Full_name email");
+    return res.status(200).json({
+      message: "Friends retrieved successfully",
+      friends,
+    })
   } catch (err: any) {
     return res.status(500).json({
       message: err.message,
