@@ -63,3 +63,43 @@ export const sendFriendRequest = async (
   }
 };
 
+export const acceptFriendRequest = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const userId = req.user?.userId;
+    const { friendId } = req.params;
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+    const request = await Friend.findOne({
+      _id: friendId,
+      receiver: userId,
+      status: "pending",
+    });
+
+    if (!request) {
+      return res.status(404).json({
+        message: "Friend request not found",
+      });
+    }
+
+    request.status = "accepted";
+
+    await request.save();
+
+    return res.status(200).json({
+      message: "Friend request accepted",
+      request,
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+};
