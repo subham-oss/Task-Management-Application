@@ -137,6 +137,38 @@ export const rejectFriendRequest = async (req: Request, res: Response) => {
   }
 }
 
+export const getFriendRequests = async (req: Request, res: Response) => {
+  try{
+    const userId = req.user?.userId;
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+    const requests = await Friend.find({
+      receiver: userId,
+      status: "pending",
+    })
+    .populate("requester", "Full_name email");
+    if (!requests) {
+      return res.status(404).json({
+        message: "No friend requests found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Friend requests retrieved successfully",
+      requests,
+    })
+  }
+  catch(err:any){
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+}
+
 export const getfriend = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
