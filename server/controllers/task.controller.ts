@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import Task from "../models/Task.model.ts";
+import Friend from "../models/friend.model.ts";
 
 export const createTask = async (req: Request, res: Response) => {
   try {
@@ -149,3 +150,82 @@ export const deleteTask = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const shareTask = async (req: Request, res: Response) => {
+  try{
+    const userId = req.user?.userId;
+    const { taskId, friendId } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+     if (!taskId || !friendId) {
+      return res.status(400).json({
+        message: "taskId and friendId are required",
+      });
+    }
+
+    if (friendId === userId) {
+      return res.status(400).json({
+        message: "You can't share a task with yourself",
+      });
+    }
+
+    const friend = await Friend.findOne({
+       $or: [
+        {
+          requester: userId,
+          receiver: friendId,
+        },
+        {
+          requester: friendId,
+          receiver: userId,
+        },
+      ],
+    })
+
+    if (!friend || friend.status !== "accepted") {
+      return res.status(400).json({
+        message: "You can only share tasks with accepted friends",
+      });
+    }
+
+
+    const task = await Task.findOne({
+      _id: taskId,
+      userId: userId,
+    });
+
+    if (!task) {
+      return res.status(404).json({
+        message: "Task not found or you don't have permission",
+      });
+    }
+
+    const alreadyShared = task.sharedWith.some(
+      (id) => id.toString() === friendId
+    );
+
+    if (alreadyShared) {
+      return res.status(400).json({
+        message: "Task is already shared with this friend",
+      });
+    }
+    
+    task.sharedWith.push(friendId);
+    await task.save();
+
+    return res.status(200).json({
+      message: "Task shared successfully",
+      task,
+    })
+  }
+  catch (err: any) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+}
