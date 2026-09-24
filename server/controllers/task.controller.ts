@@ -154,7 +154,8 @@ export const deleteTask = async (req: Request, res: Response) => {
 export const shareTask = async (req: Request, res: Response) => {
   try{
     const userId = req.user?.userId;
-    const { taskId, friendId } = req.body;
+    const taskId = req.params.taskId;
+    const  friendId  = req.body;
 
     if (!userId) {
       return res.status(401).json({
@@ -214,7 +215,7 @@ export const shareTask = async (req: Request, res: Response) => {
         message: "Task is already shared with this friend",
       });
     }
-    
+
     task.sharedWith.push(friendId);
     await task.save();
 
