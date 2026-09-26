@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import api from "../api/axios";
 import { Eye, EyeOff, Mail } from "lucide-react";
 
 import { useState } from "react";
@@ -34,8 +35,9 @@ export default function Login() {
     setLoading(true);
 
     await new Promise((r) => setTimeout(r, 2000));
+    const response = await api.post("/api/user/login", data);
 
-    console.log(data);
+    console.log(response);
 
     setLoading(false);
   };
