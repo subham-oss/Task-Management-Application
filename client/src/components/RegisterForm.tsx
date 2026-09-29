@@ -1,85 +1,69 @@
 import { useState } from "react";
 
+import api from "../api/axios";
+
 import { useForm } from "react-hook-form";
+
+import { useNavigate } from "react-router-dom";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-  Eye,
-  EyeOff,
-  Mail,
-  User,
-} from "lucide-react";
+import { Eye, EyeOff, Mail, User } from "lucide-react";
 
-import {
-  FaGithub,
-  FaGoogle,
-} from "react-icons/fa";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 
-import {
-  registerSchema,
-  type RegisterSchema,
-} from "../lib/schema";
+import { registerSchema, type RegisterSchema } from "../lib/schema";
 
 export default function RegisterForm() {
-  const [showPassword, setShowPassword] =
-    useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [showConfirm, setShowConfirm] =
-    useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterSchema>({
-    resolver:
-      zodResolver(registerSchema),
+    resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = async (
-    data: RegisterSchema
-  ) => {
-    setLoading(true);
-
-    await new Promise((resolve) =>
-      setTimeout(resolve, 2000)
-    );
-
-    console.log(data);
-
-    setLoading(false);
+  const navigate = useNavigate();
+  const onSubmit = async (data: RegisterSchema) => {
+    try {
+      setLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await api.post("/api/user/register", data);
+      console.log(response.data);
+      localStorage.setItem("accessToken", response.data.accessToken);
+      navigate(`/dashboard/${response.data.userId}`);
+    } catch (err) {
+      console.log(err);
+      alert("Registration failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-5"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       {/* Name */}
 
       <div>
         <label>Full Name</label>
 
         <div className="relative mt-2">
-          <User
-            size={18}
-            className="absolute left-3 top-3"
-          />
+          <User size={18} className="absolute left-3 top-3" />
 
           <input
-            {...register("name")}
+            {...register("Full_name")}
             placeholder="John Doe"
             className="w-full rounded-xl bg-white/10 p-3 pl-10 outline-none"
           />
         </div>
 
-        <p className="text-red-400 text-sm">
-          {errors.name?.message}
-        </p>
+        <p className="text-red-400 text-sm">{errors.Full_name?.message}</p>
       </div>
 
       {/* Email */}
@@ -88,10 +72,7 @@ export default function RegisterForm() {
         <label>Email</label>
 
         <div className="relative mt-2">
-          <Mail
-            size={18}
-            className="absolute left-3 top-3"
-          />
+          <Mail size={18} className="absolute left-3 top-3" />
 
           <input
             {...register("email")}
@@ -100,9 +81,7 @@ export default function RegisterForm() {
           />
         </div>
 
-        <p className="text-red-400 text-sm">
-          {errors.email?.message}
-        </p>
+        <p className="text-red-400 text-sm">{errors.email?.message}</p>
       </div>
 
       {/* Password */}
@@ -112,97 +91,57 @@ export default function RegisterForm() {
 
         <div className="relative mt-2">
           <input
-            type={
-              showPassword
-                ? "text"
-                : "password"
-            }
+            type={showPassword ? "text" : "password"}
             {...register("password")}
             className="w-full rounded-xl bg-white/10 p-3 outline-none"
           />
 
           <button
             type="button"
-            onClick={() =>
-              setShowPassword(
-                !showPassword
-              )
-            }
+            onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3 top-3"
           >
-            {showPassword ? (
-              <EyeOff size={18} />
-            ) : (
-              <Eye size={18} />
-            )}
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
 
-        <p className="text-red-400 text-sm">
-          {errors.password?.message}
-        </p>
+        <p className="text-red-400 text-sm">{errors.password?.message}</p>
       </div>
 
       {/* Confirm Password */}
 
       <div>
-        <label>
-          Confirm Password
-        </label>
+        <label>Confirm Password</label>
 
         <div className="relative mt-2">
           <input
-            type={
-              showConfirm
-                ? "text"
-                : "password"
-            }
-            {...register(
-              "confirmPassword"
-            )}
+            type={showConfirm ? "text" : "password"}
+            {...register("confirmPassword")}
             className="w-full rounded-xl bg-white/10 p-3 outline-none"
           />
 
           <button
             type="button"
-            onClick={() =>
-              setShowConfirm(
-                !showConfirm
-              )
-            }
+            onClick={() => setShowConfirm(!showConfirm)}
             className="absolute right-3 top-3"
           >
-            {showConfirm ? (
-              <EyeOff size={18} />
-            ) : (
-              <Eye size={18} />
-            )}
+            {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
 
         <p className="text-red-400 text-sm">
-          {
-            errors.confirmPassword
-              ?.message
-          }
+          {errors.confirmPassword?.message}
         </p>
       </div>
 
       {/* Terms */}
 
       <label className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          {...register("terms")}
-        />
-
-        I accept Terms &
+        <input type="checkbox" {...register("terms")} />I accept Terms &
         Conditions
       </label>
 
-      <p className="text-red-400 text-sm">
-        {errors.terms?.message}
-      </p>
+      <p className="text-red-400 text-sm">{errors.terms?.message}</p>
 
       {/* Button */}
 
@@ -210,9 +149,7 @@ export default function RegisterForm() {
         disabled={loading}
         className="w-full rounded-xl bg-indigo-600 p-3 font-semibold transition hover:bg-indigo-500"
       >
-        {loading
-          ? "Creating Account..."
-          : "Create Account"}
+        {loading ? "Creating Account..." : "Create Account"}
       </button>
 
       {/* Divider */}
