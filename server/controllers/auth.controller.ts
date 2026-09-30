@@ -220,6 +220,8 @@ export const generateAccessToken = async (req: Request, res: Response) => {
       accessToken,
     });
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    return res.status(401).json({
+    message: "Invalid or expired refresh token",
+  });
   }
 };
