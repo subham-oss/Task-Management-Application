@@ -1,6 +1,7 @@
 import express, { type Express, type Request, type Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import connectDB  from './config/db.ts';
 import  userRouter  from './routes/user.route.ts';
 import Taskrouter from './routes/task.route.ts';
@@ -10,11 +11,14 @@ dotenv.config();
 
 
 const app: Express = express();
+
+app.use(express.json());
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true,
   }));
-app.use(express.json());
+
+app.use(cookieParser());
 const port = process.env.PORT;
 connectDB();
 app.use('/api/user', userRouter);
