@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import api from "../api/axios";
 import { motion } from "framer-motion";
 import { 
   ArrowLeft, PlusCircle, X, FileText, 
@@ -12,30 +13,31 @@ export default function CreateTask() {
   const navigate = useNavigate();
 
   // Controlled Form State Inputs
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("Pending");
-  const [priority, setPriority] = useState("Medium");
-  const [date, setDate] = useState("");
+  const [Task_Title, setTask_Title] = useState("");
+  const [Task_Description, setTask_Description] = useState("");
+  const [Initial_Phase_State, setInitial_Phase_State] = useState("Pending");
+  const [Severity_Index, setSeverity_Index] = useState("Medium Severity");
+  const [Target_Delivery_Date, setTarget_Delivery_Date] = useState(new Date().toISOString().split("T")[0]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Create the task object payload
-    const newTaskPayload = {
-      id: crypto.randomUUID(), // Generates a unique temporary string client-side
-      name,
-      description,
-      status,
-      priority,
-      date
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  try {
+    const data = {
+      Task_Title,
+      Task_Description,
+      Initial_Phase_State,
+      Severity_Index,
+      Target_Delivery_Date,
     };
 
-    console.log("Saving new task directive payload to database:", newTaskPayload);
-    
-    // Redirect the user back to the main management grid view
+    await api.post("/api/task/createtask", data);
+
     navigate(`/dashboard/${id}/tasks`);
-  };
+  } catch (error) {
+    console.error("Error occurred while saving task:", error);
+  }
+};
 
   return (
     <div className="min-h-screen flex bg-transparent transition-colors duration-300">
@@ -78,8 +80,8 @@ export default function CreateTask() {
               <input
                 type="text"
                 required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={Task_Title}
+                onChange={(e) => setTask_Title(e.target.value)}
                 placeholder="Ex: Architect End-to-End Database Migration Pipelines"
                 className="w-full px-4 py-3 text-sm rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:outline-none focus:border-blue-500/50 transition text-current placeholder:opacity-40"
               />
@@ -94,8 +96,8 @@ export default function CreateTask() {
               <textarea
                 required
                 rows={4}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                value={Task_Description}
+                onChange={(e) => setTask_Description(e.target.value)}
                 placeholder="Breakdown technical parameters, dependencies, and deployment checklists here..."
                 className="w-full px-4 py-3 text-sm rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:outline-none focus:border-blue-500/50 transition text-current resize-none leading-relaxed placeholder:opacity-40"
               />
@@ -111,8 +113,8 @@ export default function CreateTask() {
                   Initial Phase State
                 </label>
                 <select
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
+                  value={Initial_Phase_State}
+                  onChange={(e) => setInitial_Phase_State(e.target.value)}
                   className="w-full px-4 py-3 text-sm rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:outline-none focus:border-blue-500/50 transition text-current cursor-pointer"
                 >
                   <option value="Pending" className="dark:bg-neutral-900 text-black dark:text-white">Pending</option>
@@ -128,13 +130,13 @@ export default function CreateTask() {
                   Severity Index
                 </label>
                 <select
-                  value={priority}
-                  onChange={(e) => setPriority(e.target.value)}
+                  value={Severity_Index}
+                  onChange={(e) => setSeverity_Index(e.target.value)}
                   className="w-full px-4 py-3 text-sm rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:outline-none focus:border-blue-500/50 transition text-current cursor-pointer"
                 >
-                  <option value="Low" className="dark:bg-neutral-900 text-black dark:text-white">Low Severity</option>
-                  <option value="Medium" className="dark:bg-neutral-900 text-black dark:text-white">Medium Severity</option>
-                  <option value="High" className="dark:bg-neutral-900 text-black dark:text-white">High Severity</option>
+                  <option value="Low Severity" className="dark:bg-neutral-900 text-black dark:text-white">Low Severity</option>
+                  <option value="Medium Severity" className="dark:bg-neutral-900 text-black dark:text-white">Medium Severity</option>
+                  <option value="High Severity" className="dark:bg-neutral-900 text-black dark:text-white">High Severity</option>
                 </select>
               </div>
 
@@ -147,8 +149,8 @@ export default function CreateTask() {
                 <input
                   type="date"
                   required
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
+                  value={Target_Delivery_Date}
+                  onChange={(e) => setTarget_Delivery_Date(e.target.value)}
                   className="w-full px-4 py-3 text-sm rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:outline-none focus:border-blue-500/50 transition text-current calendar-picker-indicator-white"
                 />
               </div>
