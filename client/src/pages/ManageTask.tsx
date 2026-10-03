@@ -51,9 +51,16 @@ export default function ManageTasks() {
     fetchTasks();
   }, []);
 
-  const handleDeleteTask = (taskId: string) => {
+ const handleDeleteTask = async (taskId: string) => {
+  try {
+    await api.delete(`/api/task/deletetask/${taskId}`);
+
     setTasks((prev) => prev.filter((task) => task._id !== taskId));
-  };
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    alert("Failed to delete task. Please try again.");
+  }
+};
 
   const filteredTasks = useMemo(() => {
     return tasks.filter((task) => {
