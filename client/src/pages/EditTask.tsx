@@ -1,66 +1,85 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { 
-  ArrowLeft, Save, X, FileText, 
-  Layers, AlertTriangle, Calendar 
+import {
+  ArrowLeft,
+  Save,
+  X,
+  FileText,
+  Layers,
+  AlertTriangle,
+  Calendar,
 } from "lucide-react";
 import Sidebar from "../components/Sidebar";
-
-// ============================================================================
-// Mock Task Discovery Engine (Simulating API fetch target)
-// ============================================================================
-const mockTasksRepository = [
-  { id: "1", name: "Deploy Auth System Engine", description: "Migrate traditional JSON web token protocols into dynamic decentralized OAuth validation loops.", status: "In Progress", priority: "High", date: "2026-07-12" },
-  { id: "2", name: "Redesign User Workspace Navigation", description: "Optimize structural collapse animations and integrate centralized state management adapters.", status: "Completed", priority: "Medium", date: "2026-07-10" },
-  { id: "3", name: "Optimize Redis Caching Layer", description: "Formulate sub-second latency key invalidation schedules across heavy relational database paths.", status: "Pending", priority: "High", date: "2026-07-14" },
-];
+import api from "../api/axios";
 
 // ============================================================================
 // Core Unified Component
 // ============================================================================
 export default function EditTask() {
-  const { id = "default-user", taskId } = useParams<{ id: string; taskId: string }>();
+  const { id = "default-user", taskId } = useParams<{
+    id: string;
+    taskId: string;
+  }>();
   const navigate = useNavigate();
 
   // Form Field State Pipeline
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("Pending");
-  const [priority, setPriority] = useState("Medium");
+  const [priority, setPriority] = useState("Medium Severity");
   const [date, setDate] = useState("");
 
   // Simulate lifecycle API loading hook parameters
   useEffect(() => {
-    const targetTask = mockTasksRepository.find(t => t.id === taskId) || mockTasksRepository[0];
-    if (targetTask) {
-      setName(targetTask.name);
-      setDescription(targetTask.description);
-      setStatus(targetTask.status);
-      setPriority(targetTask.priority);
-      setDate(targetTask.date);
+    const fetchTask = async () => {
+      try {
+        const response = await api.get(`/api/task/getonetask/${taskId}`);
+
+        const task = response.data.task;
+
+        setName(task.Task_Title);
+        setDescription(task.Task_Description);
+        setStatus(task.Initial_Phase_State);
+        setPriority(task.Severity_Index);
+        setDate(task.Target_Delivery_Date?.split("T")[0]);
+      } catch (error) {
+        console.error("Error fetching task:", error);
+      }
+    };
+
+    if (taskId) {
+      fetchTask();
     }
   }, [taskId]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent)=> {
     e.preventDefault();
-    
-    const updatedPayload = { taskId, name, description, status, priority, date };
-    console.log("Staging synchronized database commits for dynamic payload: ", updatedPayload);
-    
-    // Smooth return redirection back to the main management deck
+
+  try {
+    const updatedPayload = {
+      Task_Title: name,
+      Task_Description: description,
+      Initial_Phase_State: status,
+      Severity_Index: priority,
+      Target_Delivery_Date: date,
+    };
+
+    await api.put(`/api/task/edittask/${taskId}`, updatedPayload);
+
     navigate(`/dashboard/${id}/tasks`);
+  } catch (error) {
+    console.error("Error updating task:", error);
+  }
   };
 
   return (
     <div className="min-h-screen flex bg-transparent transition-colors duration-300">
-      
       {/* Left Navigation Workspace Panel */}
       <Sidebar />
 
       {/* Main App Workspace Canvas */}
       <main className="flex-1 min-w-0 p-4 sm:p-6 md:p-8 overflow-y-auto max-h-screen space-y-8 relative z-10">
-        
         {/* 1. Glassmorphic Control Return Header */}
         <header className="flex items-center gap-4 p-6 rounded-3xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur-md">
           <Link
@@ -68,11 +87,21 @@ export default function EditTask() {
             className="p-3 rounded-xl bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 border border-black/5 dark:border-white/10 transition group"
             title="Return to Tasks Deck"
           >
-            <ArrowLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" />
+            <ArrowLeft
+              size={18}
+              className="group-hover:-translate-x-0.5 transition-transform"
+            />
           </Link>
           <div>
-            <h1 className="text-3xl font-black tracking-tight">Modify Directive</h1>
-            <p className="text-sm opacity-60 mt-0.5 font-medium">Updating system records for Task ID Reference: <span className="font-mono text-blue-500 font-bold">{taskId || "1"}</span></p>
+            <h1 className="text-3xl font-black tracking-tight">
+              Modify Directive
+            </h1>
+            <p className="text-sm opacity-60 mt-0.5 font-medium">
+              Updating system records for Task ID Reference:{" "}
+              <span className="font-mono text-blue-500 font-bold">
+                {taskId || "1"}
+              </span>
+            </p>
           </div>
         </header>
 
@@ -83,7 +112,6 @@ export default function EditTask() {
           className="max-w-4xl p-6 sm:p-8 rounded-3xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur-md shadow-sm"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
-            
             {/* Input Element: Task Name */}
             <div className="flex flex-col gap-2">
               <label className="text-xs font-bold uppercase tracking-wider opacity-70 flex items-center gap-2">
@@ -118,7 +146,6 @@ export default function EditTask() {
 
             {/* Selector Grid Row Array */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              
               {/* Select Element: Status */}
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-bold uppercase tracking-wider opacity-70 flex items-center gap-2">
@@ -130,9 +157,24 @@ export default function EditTask() {
                   onChange={(e) => setStatus(e.target.value)}
                   className="w-full px-4 py-3 text-sm rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:outline-none focus:border-blue-500/50 transition text-current cursor-pointer"
                 >
-                  <option value="Pending" className="dark:bg-neutral-900 text-black dark:text-white">Pending</option>
-                  <option value="In Progress" className="dark:bg-neutral-900 text-black dark:text-white">In Progress</option>
-                  <option value="Completed" className="dark:bg-neutral-900 text-black dark:text-white">Completed</option>
+                  <option
+                    value="Pending"
+                    className="dark:bg-neutral-900 text-black dark:text-white"
+                  >
+                    Pending
+                  </option>
+                  <option
+                    value="In Progress"
+                    className="dark:bg-neutral-900 text-black dark:text-white"
+                  >
+                    In Progress
+                  </option>
+                  <option
+                    value="Completed"
+                    className="dark:bg-neutral-900 text-black dark:text-white"
+                  >
+                    Completed
+                  </option>
                 </select>
               </div>
 
@@ -147,9 +189,24 @@ export default function EditTask() {
                   onChange={(e) => setPriority(e.target.value)}
                   className="w-full px-4 py-3 text-sm rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:outline-none focus:border-blue-500/50 transition text-current cursor-pointer"
                 >
-                  <option value="Low" className="dark:bg-neutral-900 text-black dark:text-white">Low Severity</option>
-                  <option value="Medium" className="dark:bg-neutral-900 text-black dark:text-white">Medium Severity</option>
-                  <option value="High" className="dark:bg-neutral-900 text-black dark:text-white">High Severity</option>
+                  <option
+                    value="Low"
+                    className="dark:bg-neutral-900 text-black dark:text-white"
+                  >
+                    Low Severity
+                  </option>
+                  <option
+                    value="Medium"
+                    className="dark:bg-neutral-900 text-black dark:text-white"
+                  >
+                    Medium Severity
+                  </option>
+                  <option
+                    value="High"
+                    className="dark:bg-neutral-900 text-black dark:text-white"
+                  >
+                    High Severity
+                  </option>
                 </select>
               </div>
 
@@ -167,7 +224,6 @@ export default function EditTask() {
                   className="w-full px-4 py-3 text-sm rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:outline-none focus:border-blue-500/50 transition text-current calendar-picker-indicator-white"
                 />
               </div>
-
             </div>
 
             {/* 3. Form Control Executable Operations Array Footer */}
@@ -187,10 +243,8 @@ export default function EditTask() {
                 Commit Updates
               </button>
             </div>
-
           </form>
         </motion.div>
-
       </main>
     </div>
   );
