@@ -24,7 +24,7 @@ interface Task {
   Task_Description: string;
   Initial_Phase_State: "Pending" | "In Progress" | "Completed";
   priority: "High Severity" | "Medium Severity" | "Low Severity";
-  date: string;
+  Target_Delivery_Date: string;
 }
 
 // ============================================================================
@@ -209,7 +209,7 @@ export default function ManageTasks() {
                   <div className="mt-6 pt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-2 opacity-50 text-xs font-semibold tabular-nums">
                       <Calendar size={14} className="text-blue-500" />
-                      <span>Due: {task.date}</span>
+                      <span>Due: {new Date(task.Target_Delivery_Date).toISOString().split("T")[0]}</span>
                     </div>
 
                     <div className="flex items-center gap-1">
