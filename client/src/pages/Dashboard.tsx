@@ -10,42 +10,101 @@ import {
   ArrowUpRight, Calendar, Activity 
 } from "lucide-react";
 import Sidebar from "../components/Sidebar";
+import api from "../api/axios";
 
-// ============================================================================
-// Mock Data Sets 
-// ============================================================================
-const taskStats = { total: 24, pending: 6, inProgress: 8, completed: 10 };
+interface Task {
+  _id: string;
+  Task_Title: string;
+  Task_Description: string;
+  Initial_Phase_State: "Pending" | "In Progress" | "Completed";
+  priority: "High Severity" | "Medium Severity" | "Low Severity";
+  Target_Delivery_Date: string;
+}
 
-const pieData = [
-  { name: "Pending", value: taskStats.pending, color: "#EAB308" },     
-  { name: "In Progress", value: taskStats.inProgress, color: "#3B82F6" }, 
-  { name: "Completed", value: taskStats.completed, color: "#10B981" },  
-];
-
-const priorityData = [
-  { name: "Low", Tasks: 7, fill: "#10B981" },
-  { name: "Medium", Tasks: 12, fill: "#3B82F6" },
-  { name: "High", Tasks: 5, fill: "#EF4444" }
-];
-
-const recentTasks = [
-  { id: "1", name: "Deploy Auth System Engine", status: "In Progress", priority: "High", date: "2026-07-12" },
-  { id: "2", name: "Redesign User Workspace Navigation", status: "Completed", priority: "Medium", date: "2026-07-10" },
-  { id: "3", name: "Optimize Redis Caching Layer", status: "Pending", priority: "High", date: "2026-07-14" },
-  { id: "4", name: "Draft API Integration Documentation", status: "In Progress", priority: "Low", date: "2026-07-13" },
-];
-
-// ============================================================================
-// Core Unified Component (Transparent Architecture)
-// ============================================================================
 export default function Dashboard() {
   const { id = "default-user" } = useParams<{ id?: string }>();
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  const taskStats = {
+  total: tasks.length,
+  pending: tasks.filter(
+    (task) => task.Initial_Phase_State === "Pending"
+  ).length,
+  inProgress: tasks.filter(
+    (task) => task.Initial_Phase_State === "In Progress"
+  ).length,
+  completed: tasks.filter(
+    (task) => task.Initial_Phase_State === "Completed"
+  ).length,
+};
+
+const pieData = [
+  {
+    name: "Pending",
+    value: taskStats.pending,
+    color: "#EAB308",
+  },
+  {
+    name: "In Progress",
+    value: taskStats.inProgress,
+    color: "#3B82F6",
+  },
+  {
+    name: "Completed",
+    value: taskStats.completed,
+    color: "#10B981",
+  },
+];
+const priorityData = [
+  {
+    name: "Low",
+    Tasks: tasks.filter(
+      (task) => task.priority === "Low Severity"
+    ).length,
+    fill: "#10B981",
+  },
+  {
+    name: "Medium",
+    Tasks: tasks.filter(
+      (task) => task.priority === "Medium Severity"
+    ).length,
+    fill: "#3B82F6",
+  },
+  {
+    name: "High",
+    Tasks: tasks.filter(
+      (task) => task.priority === "High Severity"
+    ).length,
+    fill: "#EF4444",
+  },
+];
+const recentTasks = [...tasks]
+  .sort(
+    (a, b) =>
+      new Date(b.Target_Delivery_Date).getTime() -
+      new Date(a.Target_Delivery_Date).getTime()
+  )
+  .slice(0, 4);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+  const fetchTasks = async () => {
+    try {
+      const response = await api.get("/api/task/gettasks");
+
+      setTasks(response.data.tasks);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
+
+  fetchTasks();
+}, []);
 
   const getGreeting = () => {
     const hours = currentTime.getHours();
@@ -216,14 +275,14 @@ export default function Dashboard() {
               </thead>
               <tbody className="divide-y divide-black/10 dark:divide-white/10">
                 {recentTasks.map((task) => (
-                  <tr key={task.id} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                    <td className="p-4 font-semibold">{task.name}</td>
+                  <tr key={task._id} className="hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                    <td className="p-4 font-semibold">{task.Task_Title}</td>
                     <td className="p-4">
-                      <span className={`px-2.5 py-1 text-xs font-bold rounded-lg border uppercase tracking-wider ${getStatusStyle(task.status)}`}>
-                        {task.status}
+                      <span className={`px-2.5 py-1 text-xs font-bold rounded-lg border uppercase tracking-wider ${getStatusStyle(task.Initial_Phase_State)}`}>
+                        {task.Initial_Phase_State}
                       </span>
                     </td>
-                    <td className="p-4 opacity-70 font-medium tabular-nums">{task.date}</td>
+                    <td className="p-4 opacity-70 font-medium tabular-nums">{task.Target_Delivery_Date}</td>
                     <td className={`p-4 text-xs font-bold uppercase tracking-wide ${getPriorityStyle(task.priority)}`}>
                       {task.priority}
                     </td>

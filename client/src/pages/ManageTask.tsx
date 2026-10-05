@@ -15,9 +15,6 @@ import {
 } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 
-// ============================================================================
-// Mock Task Dataset
-// ============================================================================
 interface Task {
   _id: string;
   Task_Title: string;
