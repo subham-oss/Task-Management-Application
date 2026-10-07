@@ -33,9 +33,6 @@ interface FriendRequest {
   createdAt: string;
 }
 
-// ============================================================================
-// Core Unified Component
-// ============================================================================
 export default function TeamMembers() {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [friendRequests, setFriendRequests] = useState<FriendRequest[]>([]);
