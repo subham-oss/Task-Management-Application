@@ -176,134 +176,122 @@ export default function TeamMembers() {
   if (loading) {
     return (
       <div className="min-h-screen flex bg-transparent">
-        {" "}
-        <Sidebar />{" "}
+        
+        <Sidebar />
         <main className="flex-1 min-w-0 p-4 sm:p-6 md:p-8">
-          {" "}
+          
           <div className="min-h-[70vh] flex items-center justify-center">
-            {" "}
+            
             <div className="text-center">
-              {" "}
-              <div className="w-10 h-10 mx-auto mb-4 rounded-full border-4 border-blue-500/20 border-t-blue-500 animate-spin" />{" "}
+              
+              <div className="w-10 h-10 mx-auto mb-4 rounded-full border-4 border-blue-500/20 border-t-blue-500 animate-spin" />
               <p className="text-sm font-medium opacity-60">
-                {" "}
-                Loading team members...{" "}
-              </p>{" "}
-            </div>{" "}
-          </div>{" "}
-        </main>{" "}
+                
+                Loading team members...
+              </p>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen flex bg-transparent transition-colors duration-300">
-      {" "}
-      {/* Sidebar */} <Sidebar /> {/* Main Workspace */}{" "}
+      
+   <Sidebar />
       <main className="flex-1 min-w-0 p-4 sm:p-6 md:p-8 overflow-y-auto max-h-screen space-y-8 relative z-10">
-        {" "}
-        {/* ================================================================ */}{" "}
-        {/* Header */}{" "}
-        {/* ================================================================ */}{" "}
+        
         <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur-md">
-          {" "}
+          
           <div>
-            {" "}
+            
             <h1 className="text-3xl font-black tracking-tight">
-              {" "}
-              Team Members{" "}
-            </h1>{" "}
+              
+              Team Members
+            </h1>
             <p className="text-sm opacity-60 mt-1 font-medium">
-              {" "}
-              Manage your friends, team members, and connection requests.{" "}
-            </p>{" "}
-          </div>{" "}
+              
+              Manage your friends, team members, and connection requests.
+            </p>
+          </div>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-500/10 text-blue-400 text-sm font-semibold">
-            {" "}
-            <ShieldCheck size={17} /> {friends.length} Friends{" "}
-          </div>{" "}
-        </header>{" "}
-        {/* ================================================================ */}{" "}
-        {/* Error Message */}{" "}
-        {/* ================================================================ */}{" "}
+            
+            <ShieldCheck size={17} /> {friends.length} Friends
+          </div>
+        </header>
         {error && (
           <div className="flex items-center justify-between gap-4 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400">
-            {" "}
-            <p className="text-sm font-medium"> {error} </p>{" "}
+            
+            <p className="text-sm font-medium"> {error} </p>
             <button
               onClick={() => setError("")}
               className="shrink-0 p-1 rounded-lg hover:bg-red-500/10 transition"
             >
-              {" "}
-              <X size={16} />{" "}
-            </button>{" "}
+              
+              <X size={16} />
+            </button>
           </div>
-        )}{" "}
-        {/* ================================================================ */}{" "}
-        {/* Send Friend Request */}{" "}
-        {/* ================================================================ */}{" "}
+        )}
         <section className="p-5 sm:p-6 rounded-3xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur-md">
-          {" "}
+          
           <div className="flex items-center gap-3 mb-4">
-            {" "}
+            
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
-              {" "}
-              <UserPlus size={19} className="text-blue-500" />{" "}
-            </div>{" "}
+              
+              <UserPlus size={19} className="text-blue-500" />
+            </div>
             <div>
-              {" "}
-              <h2 className="font-bold"> Add Team Member </h2>{" "}
+              
+              <h2 className="font-bold"> Add Team Member </h2>
               <p className="text-xs opacity-50">
-                {" "}
-                Send a friend request using their user ID.{" "}
-              </p>{" "}
-            </div>{" "}
-          </div>{" "}
+                
+                Send a friend request using their user ID.
+              </p>
+            </div>
+          </div>
           <div className="flex flex-col sm:flex-row gap-3">
-            {" "}
+            
             <input
               type="text"
               value={receiverId}
               onChange={(e) => setReceiverId(e.target.value)}
               placeholder="Enter user ID"
               className="flex-1 px-4 py-3 text-sm rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:outline-none focus:border-blue-500/50 transition"
-            />{" "}
+            />
             <button
               onClick={handleSendFriendRequest}
               disabled={sendingRequest || !receiverId.trim()}
               className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {" "}
-              <UserPlus size={17} />{" "}
-              {sendingRequest ? "Sending..." : "Send Request"}{" "}
-            </button>{" "}
-          </div>{" "}
-        </section>{" "}
-        {/* ================================================================ */}{" "}
-        {/* Friend Requests */}{" "}
-        {/* ================================================================ */}{" "}
+              
+              <UserPlus size={17} />
+              {sendingRequest ? "Sending..." : "Send Request"}
+            </button>
+          </div>
+        </section>
         {friendRequests.length > 0 && (
           <section>
-            {" "}
+            
             <div className="flex items-center justify-between mb-4">
-              {" "}
+              
               <div>
-                {" "}
-                <h2 className="text-xl font-bold"> Friend Requests </h2>{" "}
+                
+                <h2 className="text-xl font-bold"> Friend Requests </h2>
                 <p className="text-sm opacity-50 mt-1">
-                  {" "}
-                  People who want to connect with you.{" "}
-                </p>{" "}
-              </div>{" "}
+                  
+                  People who want to connect with you.
+                </p>
+              </div>
               <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-sm font-bold">
-                {" "}
-                {friendRequests.length}{" "}
-              </span>{" "}
-            </div>{" "}
+                
+                {friendRequests.length}
+              </span>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-              {" "}
+              
               <AnimatePresence mode="popLayout">
-                {" "}
+                
                 {friendRequests.map((request) => (
                   <motion.div
                     key={request._id}
@@ -313,98 +301,92 @@ export default function TeamMembers() {
                     exit={{ opacity: 0, scale: 0.95 }}
                     className="p-5 rounded-3xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 backdrop-blur-md"
                   >
-                    {" "}
+                    
                     <div className="flex items-center gap-4">
-                      {" "}
+                      
                       <div className="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center shrink-0">
-                        {" "}
-                        <UserPlus size={24} className="text-blue-500" />{" "}
-                      </div>{" "}
+                        
+                        <UserPlus size={24} className="text-blue-500" />
+                      </div>
                       <div className="min-w-0">
-                        {" "}
+                        
                         <h3 className="font-bold truncate">
-                          {" "}
-                          {request.requester.Full_name}{" "}
-                        </h3>{" "}
+                          
+                          {request.requester.Full_name}
+                        </h3>
                         <p className="text-sm opacity-50 truncate mt-1">
-                          {" "}
-                          {request.requester.email}{" "}
-                        </p>{" "}
-                      </div>{" "}
-                    </div>{" "}
+                          
+                          {request.requester.email}
+                        </p>
+                      </div>
+                    </div>
                     <div className="flex gap-2 mt-5 pt-4 border-t border-black/5 dark:border-white/5">
-                      {" "}
+                      
                       <button
                         onClick={() => handleAcceptFriendRequest(request._id)}
                         disabled={processingRequestId === request._id}
                         className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 transition text-sm font-semibold disabled:opacity-50"
                       >
-                        {" "}
-                        <Check size={15} /> Accept{" "}
-                      </button>{" "}
+                        
+                        <Check size={15} /> Accept
+                      </button>
                       <button
                         onClick={() => handleRejectFriendRequest(request._id)}
                         disabled={processingRequestId === request._id}
                         className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-red-600 text-white hover:bg-red-700 transition text-sm font-semibold disabled:opacity-50"
                       >
-                        {" "}
-                        <X size={15} /> Reject{" "}
-                      </button>{" "}
-                    </div>{" "}
+                        
+                        <X size={15} /> Reject
+                      </button>
+                    </div>
                   </motion.div>
-                ))}{" "}
-              </AnimatePresence>{" "}
-            </div>{" "}
+                ))}
+              </AnimatePresence>
+            </div>
           </section>
-        )}{" "}
-        {/* ================================================================ */}{" "}
-        {/* Search Friends */}{" "}
-        {/* ================================================================ */}{" "}
+        )}
         <section className="p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur-md">
-          {" "}
+          
           <div className="relative w-full">
-            {" "}
+            
             <Search
               className="absolute left-4 top-1/2 -translate-y-1/2 opacity-40 pointer-events-none"
               size={18}
-            />{" "}
+            />
             <input
               type="text"
               placeholder="Search friends by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-11 pr-4 py-3 text-sm rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:outline-none focus:border-blue-500/50 transition placeholder:opacity-50"
-            />{" "}
-          </div>{" "}
-        </section>{" "}
-        {/* ================================================================ */}{" "}
-        {/* Friends */}{" "}
-        {/* ================================================================ */}{" "}
+            />
+          </div>
+        </section>
         <section>
-          {" "}
+          
           <div className="flex items-center justify-between mb-5">
-            {" "}
+            
             <div>
-              {" "}
-              <h2 className="text-xl font-bold"> My Friends </h2>{" "}
+              
+              <h2 className="text-xl font-bold"> My Friends </h2>
               <p className="text-sm opacity-50 mt-1">
-                {" "}
-                Your accepted team connections.{" "}
-              </p>{" "}
-            </div>{" "}
+                
+                Your accepted team connections.
+              </p>
+            </div>
             <span className="text-sm opacity-50">
-              {" "}
-              {filteredFriends.length} members{" "}
-            </span>{" "}
-          </div>{" "}
-          {/* Friend Cards */}{" "}
+              
+              {filteredFriends.length} members
+            </span>
+          </div>
+          {/* Friend Cards */}
           <motion.div
             layout
             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
           >
-            {" "}
+            
             <AnimatePresence mode="popLayout">
-              {" "}
+              
               {filteredFriends.map((friend) => {
                 const friendUser = getFriendUser(friend);
                 if (!friendUser) {
@@ -421,91 +403,88 @@ export default function TeamMembers() {
                     whileHover={{ y: -4 }}
                     className="p-6 rounded-3xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 backdrop-blur-md flex flex-col justify-between group shadow-sm relative overflow-hidden"
                   >
-                    {" "}
-                    {/* Top */}{" "}
+                    
+                    {/* Top */}
                     <div>
-                      {" "}
+                      
                       <div className="flex items-start justify-between gap-4 mb-5">
-                        {" "}
+                        
                         <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center ring-2 ring-blue-500/10">
-                          {" "}
+                          
                           <ShieldCheck
                             size={29}
                             className="text-blue-500"
-                          />{" "}
-                        </div>{" "}
+                          />
+                        </div>
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md border bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
-                          {" "}
-                          <Activity size={10} /> Accepted{" "}
-                        </span>{" "}
-                      </div>{" "}
-                      {/* Name */}{" "}
+                          
+                          <Activity size={10} /> Accepted
+                        </span>
+                      </div>
+                      {/* Name */}
                       <div className="space-y-1">
-                        {" "}
+                        
                         <h3 className="text-lg font-bold tracking-tight">
-                          {" "}
-                          {friendUser.Full_name}{" "}
-                        </h3>{" "}
+                          
+                          {friendUser.Full_name}
+                        </h3>
                         <p className="text-xs font-semibold text-blue-500/80 uppercase tracking-wider flex items-center gap-1.5">
-                          {" "}
-                          <Shield size={12} /> Team Member{" "}
-                        </p>{" "}
-                      </div>{" "}
-                      {/* User Info */}{" "}
+                          
+                          <Shield size={12} /> Team Member
+                        </p>
+                      </div>
+                      {/* User Info */}
                       <div className="mt-5 space-y-3 text-xs font-medium opacity-70">
-                        {" "}
+                        
                         <div className="flex items-center gap-2">
-                          {" "}
-                          <Mail size={14} className="opacity-60" />{" "}
+                          
+                          <Mail size={14} className="opacity-60" />
                           <span className="truncate">
-                            {" "}
-                            {friendUser.email}{" "}
-                          </span>{" "}
-                        </div>{" "}
-                      </div>{" "}
-                    </div>{" "}
-                    {/* Footer */}{" "}
+                            
+                            {friendUser.email}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Footer */}
                     <div className="mt-6 pt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-end">
-                      {" "}
+                      
                       <a
                         href={`mailto:${friendUser.email}`}
                         title={`Contact ${friendUser.Full_name}`}
                         className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-black/5 dark:bg-white/5 hover:bg-blue-600/10 border border-black/5 dark:border-white/5 hover:text-blue-400 transition cursor-pointer text-xs font-semibold"
                       >
-                        {" "}
-                        <Mail size={14} /> Contact{" "}
-                      </a>{" "}
-                    </div>{" "}
+                        
+                        <Mail size={14} /> Contact
+                      </a>
+                    </div>
                   </motion.div>
                 );
-              })}{" "}
-            </AnimatePresence>{" "}
-          </motion.div>{" "}
-          {/* ============================================================ */}{" "}
-          {/* Empty State */}{" "}
-          {/* ============================================================ */}{" "}
+              })}
+            </AnimatePresence>
+          </motion.div>
           {filteredFriends.length === 0 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="col-span-full py-16 text-center border border-dashed border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 rounded-3xl backdrop-blur-md"
             >
-              {" "}
-              <Shield className="mx-auto opacity-30 mb-4" size={32} />{" "}
+              
+              <Shield className="mx-auto opacity-30 mb-4" size={32} />
               <h4 className="text-lg font-bold">
-                {" "}
-                {searchQuery ? "No friends found" : "No friends yet"}{" "}
-              </h4>{" "}
+                
+                {searchQuery ? "No friends found" : "No friends yet"}
+              </h4>
               <p className="text-sm opacity-50 font-medium max-w-sm mx-auto mt-1">
-                {" "}
+                
                 {searchQuery
                   ? "Try searching with a different name or email."
-                  : "Send a friend request to start building your team."}{" "}
-              </p>{" "}
+                  : "Send a friend request to start building your team."}
+              </p>
             </motion.div>
-          )}{" "}
-        </section>{" "}
-      </main>{" "}
+          )}
+        </section>
+      </main>
     </div>
   );
 }
