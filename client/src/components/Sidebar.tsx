@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   User,
 } from "lucide-react";
+import api from "../api/axios";
 
 // Explicit Framer Motion 12 Variant Typing for smooth structural transitions
 const sidebarVariants: Variants = {
@@ -64,11 +65,21 @@ export default function Sidebar() {
     },
   ];
 
-  const handleLogout = () => {
-    // Perform authentication cleanup here (e.g., deleting cookies, clearing local tokens)
-    console.log("Terminating workspace engine session.");
-    navigate("/login");
-  };
+  const handleLogout = async () => {
+  try {
+    await api.post(
+      `${import.meta.env.VITE_API_URL}/api/user/logout`,
+      {},
+      { withCredentials: true }
+    );
+  } catch (error) {
+    console.error("Logout failed:", error);
+  } finally {
+    localStorage.removeItem("accessToken");
+    sessionStorage.clear();
+    navigate("/login", { replace: true });
+  }
+};
 
   return (
     <motion.aside
