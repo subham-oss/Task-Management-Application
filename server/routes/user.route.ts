@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register,login,generateAccessToken } from '../controllers/auth.controller.ts';
+import { register,login,generateAccessToken,logout } from '../controllers/auth.controller.ts';
 
 const userRouter = Router();
 
@@ -11,4 +11,6 @@ userRouter.post('/login', login);
 
 //generate token
 userRouter.post('/generate-token', generateAccessToken);
+// Logout route
+userRouter.post('/logout', logout);
 export default userRouter;
