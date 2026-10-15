@@ -4,8 +4,6 @@ import { type Request, type Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// Register function
-
 export const register = async (req: Request, res: Response) => {
   try {
     const { Full_name, email, password } = req.body;
@@ -80,8 +78,6 @@ export const register = async (req: Request, res: Response) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-// Login function
 
 export const login = async (req: Request, res: Response) => {
   try {
