@@ -68,7 +68,7 @@ export default function Sidebar() {
   const handleLogout = async () => {
   try {
     await api.post(
-      `${import.meta.env.VITE_API_URL}/api/user/logout`,
+      '/api/user/logout',
       {},
       { withCredentials: true }
     );
