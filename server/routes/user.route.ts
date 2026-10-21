@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { register,login,generateAccessToken,logout } from '../controllers/auth.controller.ts';
+import { register,login,generateAccessToken,logout,getUserProfile } from '../controllers/auth.controller.ts';
+import {authMiddleware} from '../middleware/auth.middleware.ts';
 
 const userRouter = Router();
 
@@ -13,4 +14,6 @@ userRouter.post('/login', login);
 userRouter.post('/generate-token', generateAccessToken);
 // Logout route
 userRouter.post('/logout', logout);
+// get user profile route
+userRouter.get('/profile', authMiddleware, getUserProfile);
 export default userRouter;
