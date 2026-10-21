@@ -156,6 +156,42 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
+
+export const getUserProfile = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    const user = await User.findById(userId).select("Full_name email");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user: {
+        username: user.Full_name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch user profile",
+    });
+  }
+};
+
 export const generateAccessToken = async (req: Request, res: Response) => {
   try {
     const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
