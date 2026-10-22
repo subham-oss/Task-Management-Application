@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { NavLink, useNavigate, useParams,Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { NavLink, useNavigate, useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
@@ -22,6 +22,25 @@ const sidebarVariants: Variants = {
   expanded: { width: 280 },
   collapsed: { width: 80 },
 };
+interface UserProfile {
+  username: string;
+  email: string;
+}
+const [user, setUser] = useState<UserProfile | null>(null);
+
+useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      const response = await api.get("/api/user/profile");
+
+      setUser(response.data.user);
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+    }
+  };
+
+  fetchProfile();
+}, []);
 
 export default function Sidebar() {
   const { dark, toggleTheme } = useTheme();
@@ -30,12 +49,11 @@ export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(true);
 
   // Mock User Session Data (Swap with your global Auth state/context later)
-  const user = {
-    username: "Alex Mercer",
-    email: "alex.m@taskflow.com",
-    avatar:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250&auto=format&fit=crop",
-  };
+  const username = user?.username ?? "Loading...";
+  const email = user?.email ?? "";
+  const avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    user?.username ?? "User",
+  )}&background=random`;
 
   // Explicit path mapping synchronized with your React Router configuration
   const menuItems = [
@@ -66,20 +84,16 @@ export default function Sidebar() {
   ];
 
   const handleLogout = async () => {
-  try {
-    await api.post(
-      '/api/user/logout',
-      {},
-      { withCredentials: true }
-    );
-  } catch (error) {
-    console.error("Logout failed:", error);
-  } finally {
-    localStorage.removeItem("accessToken");
-    sessionStorage.clear();
-    navigate("/login", { replace: true });
-  }
-};
+    try {
+      await api.post("/api/user/logout", {}, { withCredentials: true });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      localStorage.removeItem("accessToken");
+      sessionStorage.clear();
+      navigate("/login", { replace: true });
+    }
+  };
 
   return (
     <motion.aside
@@ -140,10 +154,10 @@ export default function Sidebar() {
               title="Click to update avatar"
               className="shrink-0 rounded-xl overflow-hidden group relative block"
             >
-              {user.avatar ? (
+              {avatar ? (
                 <img
-                  src={user.avatar}
-                  alt={user.username}
+                  src={avatar}
+                  alt={username}
                   className="w-11 h-11 rounded-xl object-cover ring-2 ring-blue-500/30 border border-white/20 transition-transform group-hover:scale-105"
                 />
               ) : (
@@ -162,10 +176,10 @@ export default function Sidebar() {
                   className="overflow-hidden whitespace-nowrap"
                 >
                   <h4 className="text-sm font-semibold truncate max-w-[150px]">
-                    {user.username}
+                    {username}
                   </h4>
                   <p className="text-xs opacity-60 truncate max-w-[150px] font-medium mt-0.5">
-                    {user.email}
+                    {email}
                   </p>
                 </motion.div>
               )}
