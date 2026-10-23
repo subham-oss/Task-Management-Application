@@ -26,9 +26,18 @@ interface UserProfile {
   username: string;
   email: string;
 }
-const [user, setUser] = useState<UserProfile | null>(null);
 
-useEffect(() => {
+
+
+
+export default function Sidebar() {
+  const { dark, toggleTheme } = useTheme();
+  const { id = "default-user" } = useParams<{ id?: string }>();
+  const navigate = useNavigate();
+  const [isExpanded, setIsExpanded] = useState(true);
+  const [user, setUser] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
   const fetchProfile = async () => {
     try {
       const response = await api.get("/api/user/profile");
@@ -41,12 +50,6 @@ useEffect(() => {
 
   fetchProfile();
 }, []);
-
-export default function Sidebar() {
-  const { dark, toggleTheme } = useTheme();
-  const { id = "default-user" } = useParams<{ id?: string }>();
-  const navigate = useNavigate();
-  const [isExpanded, setIsExpanded] = useState(true);
 
   // Mock User Session Data (Swap with your global Auth state/context later)
   const username = user?.username ?? "Loading...";
