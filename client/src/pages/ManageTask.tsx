@@ -12,6 +12,8 @@ import {
   Plus,
   Edit3,
   Trash2,
+  Share2,
+  X,
 } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 
@@ -34,6 +36,9 @@ export default function ManageTasks() {
   const [activeFilter, setActiveFilter] = useState<
     "All" | "Pending" | "In Progress" | "Completed"
   >("All");
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [friendId, setFriendId] = useState("");
+  const [isSharing, setIsSharing] = useState(false);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -48,16 +53,16 @@ export default function ManageTasks() {
     fetchTasks();
   }, []);
 
- const handleDeleteTask = async (taskId: string) => {
-  try {
-    await api.delete(`/api/task/deletetask/${taskId}`);
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      await api.delete(`/api/task/deletetask/${taskId}`);
 
-    setTasks((prev) => prev.filter((task) => task._id !== taskId));
-  } catch (error) {
-    console.error("Error deleting task:", error);
-    alert("Failed to delete task. Please try again.");
-  }
-};
+      setTasks((prev) => prev.filter((task) => task._id !== taskId));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      alert("Failed to delete task. Please try again.");
+    }
+  };
 
   const filteredTasks = useMemo(() => {
     return tasks.filter((task) => {
@@ -100,6 +105,38 @@ export default function ManageTasks() {
         return "text-emerald-400 border-emerald-500/20 bg-emerald-500/5";
     }
   };
+
+  const handleShareTask = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  if (!selectedTask || !friendId.trim()) {
+    alert("Please enter your friend's ID.");
+    return;
+  }
+
+  try {
+    setIsSharing(true);
+
+    await api.post("/api/task/sharetask", {
+      taskId: selectedTask._id,
+      friendId: friendId.trim(),
+    });
+
+    alert("Task shared successfully!");
+
+    setSelectedTask(null);
+    setFriendId("");
+  } catch (error: any) {
+    console.error("Error sharing task:", error);
+
+    alert(
+      error.response?.data?.message ||
+        "Failed to share task. Please try again.",
+    );
+  } finally {
+    setIsSharing(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex bg-transparent transition-colors duration-300">
@@ -206,22 +243,47 @@ export default function ManageTasks() {
                   <div className="mt-6 pt-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-2 opacity-50 text-xs font-semibold tabular-nums">
                       <Calendar size={14} className="text-blue-500" />
-                      <span>Due: {new Date(task.Target_Delivery_Date).toISOString().split("T")[0]}</span>
+                      <span>
+                        Due:
+                        {
+                          new Date(task.Target_Delivery_Date)
+                            .toISOString()
+                            .split("T")[0]
+                        }
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-1">
-                      {/* --- ACTIVE NAVIGATION LINK REPLACED HERE --- */}
+                      
+                       <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedTask(task);
+                          setFriendId("");
+                        }}
+                        title="Share Task with Friend"
+                        aria-label={`Share ${task.Task_Title} with a friend`}
+                        className="p-2 rounded-lg bg-black/5 dark:bg-white/5 hover:bg-emerald-600/10 border border-black/5 dark:border-white/5 hover:text-emerald-400 transition cursor-pointer"
+                      >
+                        <Share2 size={14} />
+                      </button>
+
+                      {/* Edit task */}
                       <Link
                         to={`/dashboard/${id}/tasks/edit/${task._id}`}
-                        title="Edit Task Context Parameters"
+                        title="Edit Task"
+                        aria-label={`Edit ${task.Task_Title}`}
                         className="p-2 rounded-lg bg-black/5 dark:bg-white/5 hover:bg-blue-600/10 border border-black/5 dark:border-white/5 hover:text-blue-400 transition cursor-pointer"
                       >
                         <Edit3 size={14} />
                       </Link>
 
+                      {/* Delete task */}
                       <button
+                        type="button"
                         onClick={() => handleDeleteTask(task._id)}
-                        title="Terminate/Purge Task Directive"
+                        title="Delete Task"
+                        aria-label={`Delete ${task.Task_Title}`}
                         className="p-2 rounded-lg bg-black/5 dark:bg-white/5 hover:bg-red-600/10 border border-black/5 dark:border-white/5 hover:text-red-400 transition cursor-pointer"
                       >
                         <Trash2 size={14} />
@@ -255,6 +317,110 @@ export default function ManageTasks() {
           )}
         </motion.section>
       </main>
+      <AnimatePresence>
+        {selectedTask && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget && !isSharing) {
+                setSelectedTask(null);
+              }
+            }}
+          >
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="share-task-title"
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.2 }}
+              className="w-full max-w-md rounded-3xl border border-black/10 dark:border-white/10 bg-white dark:bg-gray-900 p-6 shadow-2xl text-gray-900 dark:text-white"
+            >
+              <div className="flex items-start justify-between gap-4 mb-6">
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-500">
+                      <Share2 size={20} />
+                    </div>
+                    <h2 id="share-task-title" className="text-xl font-bold">
+                      Share Task
+                    </h2>
+                  </div>
+                  <p className="text-sm opacity-60">
+                    Share this task with one of your accepted friends.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!isSharing) setSelectedTask(null);
+                  }}
+                  disabled={isSharing}
+                  aria-label="Close dialog"
+                  className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition disabled:opacity-50"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 mb-5">
+                <p className="text-xs font-semibold uppercase tracking-wider opacity-50 mb-1">
+                  Selected Task
+                </p>
+                <h3 className="font-bold break-words">{selectedTask.Task_Title}</h3>
+                <p className="text-sm opacity-60 mt-1 line-clamp-2">
+                  {selectedTask.Task_Description}
+                </p>
+              </div>
+
+              <form onSubmit={handleShareTask} className="space-y-4">
+                <div>
+                  <label htmlFor="friendId" className="block text-sm font-semibold mb-2">
+                    Friend ID
+                  </label>
+                  <input
+                    id="friendId"
+                    type="text"
+                    value={friendId}
+                    onChange={(e) => setFriendId(e.target.value)}
+                    placeholder="Enter your friend's user ID"
+                    required
+                    disabled={isSharing}
+                    className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:outline-none focus:border-emerald-500 transition disabled:opacity-50"
+                  />
+                  <p className="text-xs opacity-50 mt-2">
+                    Your friend must have an accepted friendship with you.
+                  </p>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedTask(null)}
+                    disabled={isSharing}
+                    className="flex-1 px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 font-semibold text-sm transition disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSharing || !friendId.trim()}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Share2 size={16} />
+                    {isSharing ? "Sharing..." : "Share Task"}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
