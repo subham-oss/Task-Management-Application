@@ -185,31 +185,61 @@ export const deleteTask = async (req: Request, res: Response) => {
 };
 
 export const shareTask = async (req: Request, res: Response) => {
-  try{
+  try {
     const userId = req.user?.userId;
     const taskId = req.params.taskId;
-    const  friendId  = req.body;
+    const { friendemail } = req.body;
 
+    // Check authentication
     if (!userId) {
       return res.status(401).json({
         message: "Unauthorized",
       });
     }
 
-     if (!taskId || !friendId) {
+    // Validate task ID
+    if (!taskId ) {
       return res.status(400).json({
-        message: "taskId and friendId are required",
+        message: "A valid taskId is required",
       });
     }
 
-    if (friendId === userId) {
+    // Validate friend email
+    if (
+      !friendemail ||
+      typeof friendemail !== "string" ||
+      !friendemail.trim()
+    ) {
+      return res.status(400).json({
+        message: "friendemail is required",
+      });
+    }
+
+    const email = friendemail.trim().toLowerCase();
+
+    // Find the friend using their email
+    const friendUser = await Friend.findOne({
+      email,
+    });
+
+    if (!friendUser) {
+      return res.status(404).json({
+        message: "Friend not found",
+      });
+    }
+
+    const friendId = friendUser._id.toString();
+
+    // Prevent sharing with yourself
+    if (friendId === userId.toString()) {
       return res.status(400).json({
         message: "You can't share a task with yourself",
       });
     }
 
-    const friend = await Friend.findOne({
-       $or: [
+    // Verify the friendship is accepted
+    const friendship = await Friend.findOne({
+      $or: [
         {
           requester: userId,
           receiver: friendId,
@@ -219,18 +249,19 @@ export const shareTask = async (req: Request, res: Response) => {
           receiver: userId,
         },
       ],
-    })
+      status: "accepted",
+    });
 
-    if (!friend || friend.status !== "accepted") {
+    if (!friendship) {
       return res.status(400).json({
         message: "You can only share tasks with accepted friends",
       });
     }
 
-
+    // Find the task owned by the logged-in user
     const task = await Task.findOne({
       _id: taskId,
-      userId: userId,
+      userId,
     });
 
     if (!task) {
@@ -239,6 +270,7 @@ export const shareTask = async (req: Request, res: Response) => {
       });
     }
 
+    // Check whether the task has already been shared
     const alreadyShared = task.sharedWith.some(
       (id) => id.toString() === friendId
     );
@@ -249,17 +281,19 @@ export const shareTask = async (req: Request, res: Response) => {
       });
     }
 
-    task.sharedWith.push(friendId);
+    // Share the task
+    task.sharedWith.push(friendUser._id);
     await task.save();
 
     return res.status(200).json({
       message: "Task shared successfully",
       task,
-    })
-  }
-  catch (err: any) {
+    });
+  } catch (err: unknown) {
+    console.error("Error sharing task:", err);
+
     return res.status(500).json({
-      message: err.message,
+      message: "Internal server error",
     });
   }
-}
+};
