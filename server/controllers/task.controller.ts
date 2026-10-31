@@ -219,7 +219,7 @@ export const shareTask = async (req: Request, res: Response) => {
 
     // Find the friend using their email
     const friendUser = await Friend.findOne({
-      email,
+      receiver: email,
     });
 
     if (!friendUser) {
