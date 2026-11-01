@@ -188,7 +188,7 @@ export const shareTask = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.userId;
     const taskId = req.params.taskId;
-    const { friendemail } = req.body;
+    const { friendId } = req.body;
 
     // Check authentication
     if (!userId) {
@@ -204,31 +204,6 @@ export const shareTask = async (req: Request, res: Response) => {
       });
     }
 
-    // Validate friend email
-    if (
-      !friendemail ||
-      typeof friendemail !== "string" ||
-      !friendemail.trim()
-    ) {
-      return res.status(400).json({
-        message: "friendemail is required",
-      });
-    }
-
-    const email = friendemail.trim().toLowerCase();
-
-    // Find the friend using their email
-    const friendUser = await Friend.findOne({
-      receiver: email,
-    });
-
-    if (!friendUser) {
-      return res.status(404).json({
-        message: "Friend not found",
-      });
-    }
-
-    const friendId = friendUser._id.toString();
 
     // Prevent sharing with yourself
     if (friendId === userId.toString()) {
@@ -282,7 +257,7 @@ export const shareTask = async (req: Request, res: Response) => {
     }
 
     // Share the task
-    task.sharedWith.push(friendUser._id);
+    task.sharedWith.push(friendId);
     await task.save();
 
     return res.status(200).json({
