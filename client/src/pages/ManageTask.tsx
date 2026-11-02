@@ -37,7 +37,7 @@ export default function ManageTasks() {
     "All" | "Pending" | "In Progress" | "Completed"
   >("All");
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [friendemail, setFriendEmail] = useState("");
+  const [friendId, setFriendId] = useState("");
   const [isSharing, setIsSharing] = useState(false);
 
   useEffect(() => {
@@ -109,8 +109,8 @@ export default function ManageTasks() {
   const handleShareTask = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
 
-  if (!selectedTask || !friendemail.trim()) {
-    alert("Please enter your friend's email.");
+  if (!selectedTask || !friendId.trim()) {
+    alert("Please enter your friend's ID.");
     return;
   }
 
@@ -118,13 +118,13 @@ export default function ManageTasks() {
     setIsSharing(true);
 
     await api.post(`/api/task/sharetask/${selectedTask._id}`, {
-      friendemail: friendemail.trim(),
+      friendId: friendId.trim(),
     });
 
     alert("Task shared successfully!");
 
     setSelectedTask(null);
-    setFriendEmail("");
+    setFriendId("");
   } catch (error: any) {
     console.error("Error sharing task:", error);
 
@@ -258,7 +258,7 @@ export default function ManageTasks() {
                         type="button"
                         onClick={() => {
                           setSelectedTask(task);
-                          setFriendEmail("");
+                          setFriendId("");
                         }}
                         title="Share Task with Friend"
                         aria-label={`Share ${task.Task_Title} with a friend`}
@@ -379,15 +379,15 @@ export default function ManageTasks() {
 
               <form onSubmit={handleShareTask} className="space-y-4">
                 <div>
-                  <label htmlFor="friendemail" className="block text-sm font-semibold mb-2">
-                    Friend Email
+                  <label htmlFor="friendId" className="block text-sm font-semibold mb-2">
+                    Friend ID
                   </label>
                   <input
-                    id="friendemail"
-                    type="email"
-                    value={friendemail}
-                    onChange={(e) => setFriendEmail(e.target.value)}
-                    placeholder="Enter your friend's email"
+                    id="friendId"
+                    type="text"
+                    value={friendId}
+                    onChange={(e) => setFriendId(e.target.value)}
+                    placeholder="Enter your friend's ID"
                     required
                     disabled={isSharing}
                     className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 focus:outline-none focus:border-emerald-500 transition disabled:opacity-50"
@@ -408,7 +408,7 @@ export default function ManageTasks() {
                   </button>
                   <button
                     type="submit"
-                    disabled={isSharing || !friendemail.trim()}
+                    disabled={isSharing || !friendId.trim()}
                     className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Share2 size={16} />
