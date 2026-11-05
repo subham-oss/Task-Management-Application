@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ChangeEvent } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   ArrowLeft, Upload, Camera, Check, 
@@ -18,7 +18,7 @@ const presetAvatars = [
 ];
 
 export default function UpdateAvatar() {
-  const { id = "default-user" } = useParams<{ id: string }>();
+  
   const navigate = useNavigate();
 
   // Avatar state
