@@ -28,7 +28,7 @@ const values = [
   }
 ];
 
-// Explicitly typing variants to eliminate TypeScript compilation errors
+
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -49,14 +49,14 @@ const itemVariants: Variants = {
 export default function About() {
   return (
     <div className="relative min-h-screen overflow-x-hidden ">
-      {/* Global Navigation Bar */}
+      
       <Navbar />
 
-      {/* Main Content Layout Wrapper */}
+    
       <main className="pt-32 pb-24 mb-8 px-4 max-w-7xl mx-auto relative z-10">
         
 
-        {/* Hero Header Section */}
+        
         <header className="text-center max-w-3xl mx-auto mb-20">
           <motion.span 
             initial={{ opacity: 0, scale: 0.9 }}
@@ -86,7 +86,7 @@ export default function About() {
           </motion.p>
         </header>
 
-        {/* Stats Spotlight Grid */}
+       
         <motion.section 
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -112,7 +112,7 @@ export default function About() {
           </div>
         </motion.section>
 
-        {/* Philosophy / Values Block */}
+        
         <section className="mb-24">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold">What Guides Us</h2>
@@ -144,7 +144,7 @@ export default function About() {
           </motion.div>
         </section>
 
-        {/* Vision Block */}
+        
         <motion.section 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
